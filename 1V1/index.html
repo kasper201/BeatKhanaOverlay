@@ -1,0 +1,113 @@
+<html>
+
+<head>
+	<link href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap" rel="stylesheet">
+	<link href="./css/main.css" rel="stylesheet">
+	<title>1V1 Screen</title>
+	<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+</head>
+
+<body class="BGImage">
+	<!--Topbar player-containers-->
+	<div class="MainClass">
+		<!--<img src="./images/Background.png" class="Background">-->
+		<div class="PlayerContainers" id="PlayerContainers">
+			<div class="Player1Container" id="Player1Container">
+				<div style="display: flex;height: fit-content;flex-direction: column;">
+					<span class="Player1Goal" id="Player1Goal" style="opacity: 0;">TO BEAT: 0%</span>
+					<span class="Player1ReplayText" id="Player1ReplayText" style="opacity: 0;">REPLAY CALLED</span>
+				</div>
+				<span class="Player1ReplayBase" id="Player1ReplayBase">R</span>
+				<span class="Player1Score" id="Player1Score">0</span>
+				<b class="Player1Name" id="Player1Name">OK</b>
+				<img src="./images/Placeholder.png" class="Player1Image" id="Player1Image" />
+			</div>
+			<div class="LogoSpot" id="LogoContainer">
+				<img class="LogoImage" src="./images/Logo.png">
+			</div>
+			<div class="Player2Container" id="Player2Container">
+				<img src="./images/Placeholder.png" class="Player2Image" id="Player2Image" />
+				<b class="Player2Name" id="Player2Name">BOOMER</b>
+				<span class="Player2Score" id="Player2Score">0</span>
+				<span class="Player2ReplayBase" id="Player2ReplayBase">R</span>
+				<div style="display: flex;height: fit-content;flex-direction: column;">
+					<span class="Player2Goal" id="Player2Goal" style="opacity: 0;">TO BEAT: 0%</span>
+					<span class="Player2ReplayText" id="Player2ReplayText" style="opacity: 0;">REPLAY CALLED</span>
+				</div>
+			</div>
+		</div>
+
+		<!--Playerscores-->
+		<div class="PlayerBounds ScoringShadow FadeIn" id="PlayerBounds">
+			<div class="Player1Class" id="Player1Class">
+				<p class="Player1FC" id="Player1FC">FC</p>
+				<p class="Player1Combo" id="Player1Combo">0x</p>
+				<p class="Player1ACC" id="Player1ACC">0.00%</p>
+			</div>
+			<div class="Player2Class" id="Player2Class">
+				<p class="Player2FC" id="Player2FC">FC</p>
+				<p class="Player2Combo" id="Player2Combo">0x</p>
+				<p class="Player2ACC" id="Player2ACC">0.00%</p>
+			</div>
+		</div>
+
+		<div class="TugOfWar FadeIn" id="TugOfWar">
+			<div class="LeftTugOuter">
+				<div class="LeftTugInner SmoothWidth" id="LeftTug"></div>
+			</div>
+			<div class="RightTugOuter">
+				<div class="RightTugInner SmoothWidth" id="RightTug"></div>
+			</div>
+		</div>
+		
+		<!-- Current song -->
+		<div id="Song">
+			<div class="SongCard FadeIn" id="SongCard">
+				<div class="SongCover" id="SongCover"></div>
+				<div class="BlurBox" id="BlurBox"></div>
+				<div class="SongBox">
+					<div class="SongBoxBG" id="SongBoxBG"></div>
+					<div class="SongInfoLeft">
+						<p class="SongArtist White Txt15 W340 Fade" id="SongArtist">Lauv</p>
+						<p class="SongName F700 White Txt20 W340 Fade" id="SongName">Breathe</p>
+						<p class="SongMapper White Txt15 W340 Fade" id="SongMapper">Mapped by NightHawk</p>
+						<div class="Tags">
+							<div class="TagBox DiffBox FadeIn" id="DiffBox">
+								<p class="DiffName White Txt13" id="DiffName">Easy</p>
+							</div>
+							<div class="TagBox ModifiersBox FadeIn" id="ModifiersBox">
+								<p class="ModifiersText White Txt13" id="ModifiersText">DAGNFS</p>
+							</div>
+							<div class="SongPickerName">
+								<p class="PickedBy White Txt13 FadeIn" id="PickedBy">Picked by NightHawk</p>
+							</div>
+						</div>
+					</div>
+					<div class="SongInfoRight">
+						<p class="SongKey White Txt13" id="SongKey">28ded</p>
+						<img src="./images/Placeholder.png" class="SongPicker" id="SongPicker">
+						<p class="SongLength White Txt13" id="SongLength">3:59</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="RoundBox">
+			<div class="TextBox" id="TextBox">
+				<p class="RoundText" id="RoundText">NO ROUND SET</p>
+			</div>
+			<div class="Logo">
+				<img class="LogoImageLocal" src="./images/LogoColour.png">
+			</div>
+		</div>
+
+	</div>
+
+	<script src="./js/MainHandlers.js"></script>
+	<script src="./js/FormatHandlers.js"></script>
+	<script src="./js/MapHandlers.js"></script>
+	<script src="./js/OverlayHandlers.js"></script>
+	<script src="./js/UserScoringHandlers.js"></script>
+</body>
+
+</html>

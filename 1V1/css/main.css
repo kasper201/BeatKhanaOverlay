@@ -1,0 +1,604 @@
+@import url('../Font/Poppins.ttf');
+
+body {
+  font-family: Poppins;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.BGImage {
+  width: 1920px;
+  height: 1080px;
+  /* background: #5d5d5d; */
+  opacity: 1;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  overflow: hidden;
+  z-index: -100000;
+}
+
+.FadeIn {
+  -webkit-transition: opacity 0.5s ease-in-out;
+  -moz-transition: opacity 0.5s ease-in-out;
+  -ms-transition: opacity 0.5s ease-in-out;
+  -o-transition: opacity 0.5s ease-in-out;
+  transition: opacity 0.5 ease-in-out;
+}
+
+.SmoothWidth {
+  -webkit-transition: width 0.5s ease-in-out;
+  -moz-transition: width 0.5s ease-in-out;
+  -ms-transition: width 0.5s ease-in-out;
+  -o-transition: width 0.5s ease-in-out;
+  transition: width 0.5 ease-in-out;
+}
+
+.F500 {
+  font-weight: 500;
+}
+
+.F700 {
+  font-weight: 700;
+}
+
+.White {
+  color: white;
+}
+
+.Txt13 {
+  font-size: 13px;
+}
+
+.Txt15 {
+  font-size: 15px;
+}
+
+.Txt20 {
+  font-size: 20px;
+}
+
+.W340 {
+  width: 340px;
+  max-width: 340px;
+}
+
+.Fade {
+  overflow: hidden;
+  white-space: nowrap;
+  mask-image: linear-gradient(90deg, #000 90%, transparent);
+}
+
+.ScoringShadow {
+  text-shadow: 2px 7px 11px rgba(0, 0, 0, 1);
+}
+
+/* Background */
+.Background
+{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+  background: #5d5d5d;
+  opacity: 1;
+  z-index: -100000;
+}
+
+/* PlayerContainers */
+
+.PlayerContainers {
+  position: absolute;
+  top: 0;
+  height: 108px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  opacity: 0;
+  transition: all 0.5s ease-in;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), #000000, rgba(255, 255, 255, 0));
+}
+
+.LogoSpot {
+  position: absolute;
+  left: 50%; /* Initially center the LogoSpot */
+  transform: translateX(-50%); /* Adjust for LogoSpot's own width */
+  width: 124px;
+}
+
+.LogoImage
+{
+  justify-content: center;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-left: white 3px solid;
+  border-right: white 3px solid;
+  position: relative;
+  width: auto;
+  height: 100px;
+}
+
+.Player1Container, .Player2Container {
+  position: absolute;
+  display: flex;
+  align-items: center;
+}
+
+.Player1Container {
+  right: 54%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.Player1Image {
+  width: auto;
+  height: 84px;
+  box-shadow: 0px 1px 6px 1px rgb(0 0 0 / 50%);
+  background: linear-gradient(180deg, #2f58c0, #4d90d3) border-box;
+  border: 3px solid transparent;
+  border-radius: 15px;
+  margin-right: 11px;
+}
+
+.Player1Name {
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  margin-right: 8px;
+  background: #4D5386;
+  color: white;
+  text-transform: uppercase;
+  font-size: 30px;
+  text-align: center;
+  z-index: 5;
+  border-radius:0 8px 8px 0;
+}
+
+.Player1Score {
+  min-width: 48px;
+  background: #2C3050;
+  color: white;
+  text-transform: uppercase;
+  font-size: 33px;
+  font-weight: bolder;
+  text-align: center;
+  z-index: 5;
+  border-radius: 8px 0 0 8px;
+  transition: all 0.5s ease-in-out;
+}
+
+.Player1ReplayBase {
+  padding-left: 5px;
+  padding-right: 5px;
+  background: transparent;
+  color: white;
+  text-transform: uppercase;
+  font-size: 32px;
+  font-weight: bolder;
+  text-align: center;
+  transition: all 0.5s ease-in-out;
+  z-index: 4;
+}
+
+.Player1ReplayText {
+  text-align: center;
+  color: white;
+  opacity: 1;
+  border-bottom-left-radius: 8px;
+  background-color: rgb(22, 23, 36);
+  font-size: 16px;
+  padding: 0px 8px;
+  width: auto;
+  transition: all 0.5s ease-in-out;
+}
+
+.Player1Goal {
+  opacity: 0;
+  padding-left: 13px;
+  padding-right: 13px;
+  background: #4D5386;
+  color: white;
+  text-transform: uppercase;
+  font-size: 16px;
+  font-weight: bolder;
+  text-align: center;
+  transition: all 0.5s ease-in-out;
+  z-index: 3;
+  border-radius: 8px 0 0 0;
+  text-wrap: nowrap;
+}
+
+.Player2Container {
+  left: 54%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+
+.Player2ReplayBase {
+  padding-left: 5px;
+  padding-right: 5px;
+  background: transparent;
+  color: white;
+  text-transform: uppercase;
+  font-size: 32px;
+  font-weight: bolder;
+  text-align: center;
+  transition: all 0.5s ease-in-out;
+  z-index: 4;
+}
+
+.Player2ReplayText {
+  text-align: center;
+  color: white;
+  opacity: 1;
+  border-bottom-right-radius: 8px;
+  background-color: rgb(22, 23, 36);
+  font-size: 16px;
+  padding: 0px 6px 0px 8px;
+  width: auto;
+  transition: all 0.5s ease-in-out;
+}
+
+.Player2Goal {
+  opacity: 0;
+  padding-left: 13px;
+  padding-right: 13px;
+  background: #4D5386;
+  color: white;
+  text-transform: uppercase;
+  font-size: 16px;
+  font-weight: bolder;
+  text-align: center;
+  transition: all 0.5s ease-in-out;
+  z-index: 3;
+  border-radius: 0 8px 0 0;
+  text-wrap: nowrap;
+}
+
+.Player2Score {
+  min-width: 48px;
+  background: #2C3050;
+  color: white;
+  text-transform: uppercase;
+  font-size: 33px;
+  font-weight: bolder;
+  text-align: center;
+  z-index: 5;
+  border-radius: 0 8px 8px 0;
+  transition: all 0.5s ease-in-out;
+}
+
+.Player2Name {
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  margin-left: 8px;
+  background: #4D5386;
+  color: white;
+  text-transform: uppercase;
+  font-size: 30px;
+  text-align: center;
+  z-index: 5;
+  border-radius: 8px 0 0 8px;
+}
+
+.Player2Image {
+  width: auto;
+  height: 84px;
+  box-shadow: 0px 1px 6px 1px rgb(0 0 0 / 50%);
+  background: linear-gradient(165deg, #dc6153, #fc8e7f) border-box;
+  border: 3px solid transparent;
+  border-radius: 15px;
+  margin-left: 11px;
+}
+
+/* Score Bounds | FC, Combo, ACC */
+
+.PlayerBounds {
+  width:1920px;
+  height:1080px;
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  margin-top: 783px;
+  gap: 43px;
+}
+
+.Player1Class {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  color: white;
+  width: 200px;
+}
+
+.Player1FC {
+  line-height: 0px;
+  margin: 0px;
+  padding-bottom: 36px;
+  font-size: 32px;
+  font-weight: 900;
+}
+
+.Player1Combo {
+  line-height: 0px;
+  margin: 0px;
+  padding-bottom: 47px;
+  font-size: 32px;
+  font-weight: 900;
+}
+
+.Player1ACC {
+  line-height: 0px;
+  margin: 0px;
+  font-size: 48px;
+  font-weight: 900;
+}
+
+.Player2Class {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: white;
+  width: 200px;
+}
+
+.Player2FC {
+  line-height: 0px;
+  margin: 0px;
+  padding-bottom: 36px;
+  font-size: 32px;
+  font-weight: 900;
+}
+
+.Player2Combo {
+  line-height: 0px;
+  margin: 0px;
+  padding-bottom: 47px;
+  font-size: 32px;
+  font-weight: 900;
+}
+
+.Player2ACC {
+  line-height: 0px;
+  margin: 0px;
+  padding-bottom: 30px;
+  font-size: 48px;
+  font-weight: 900;
+}
+
+/* Tug Of War */
+
+.TugOfWar {
+  display: flex;
+  opacity: 0;
+  position: absolute;
+  bottom: 168px;
+}
+
+.LeftTugOuter {
+  direction: rtl;
+  width: 960px;
+  max-width: 960px;
+}
+
+.LeftTugInner {
+  width: 0px;
+  height: 10px;
+  background-image: linear-gradient(90deg, rgba(255, 97, 97, 1), rgba(223.12, 132.95, 132.95, 1));
+}
+
+.RightTugOuter {
+  direction: ltr;
+  width: 960px;
+  max-width: 960px;
+}
+
+.RightTugInner {
+  width: 0px;
+  height: 10px;
+  background-image: linear-gradient(-90deg, rgba(204, 127, 252, 1),rgba(112, 112, 255, 1));
+}
+
+/* Song Card */
+
+#Song {
+  width: 1164px;
+  max-width: 1164px;
+  max-height: 690px;
+  display: flex;
+  gap: 15px 59px;
+  flex-wrap: wrap;
+  overflow: hidden;
+  opacity: 1;
+  transition: all 0.1s linear;
+}
+
+.SongCard {
+  height: 125px;
+  width: 550px;
+  max-height: 125px;
+  max-width: 550px;
+  opacity: 0;
+  position: absolute;
+  bottom: 30px;
+  left: 675px;
+
+}
+
+.SongCover {
+  background: url('https://eu.cdn.beatsaver.com/cfcdbd060aabc0673f4950506b5170ce59d963bc.jpg') 50% 50% / cover;
+  width: 550px;
+  height: 125px;
+  border-radius: 15px;
+  opacity: 0.5;
+}
+
+.BlurBox {
+  position: relative;
+  top: -125px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: #0000007a;
+  width: 550px;
+  height: 125px;
+  border-radius: 14px;
+  transition: all 0.5s ease;
+  overflow: hidden;
+}
+
+.SongBox {
+  display: flex;
+  position: relative;
+  top: -247px;
+  left: 4px;
+  gap: 11px;
+}
+
+.SongBoxBG {
+  top: 5px;
+  left: 5px;
+  background: url('https://eu.cdn.beatsaver.com/cfcdbd060aabc0673f4950506b5170ce59d963bc.jpg') 50% 50% / cover;
+  min-width: 116px;
+  min-height: 116px;
+  border-radius: 15px;
+  opacity: 0.9;
+  transition: all 0.5s ease;
+}
+
+.SongInfoLeft {
+  margin-top: -6px;
+}
+
+.SongArtist {
+  margin-bottom: -23px;
+}
+
+.SongName {
+  margin-bottom: -18px;
+}
+
+.SongMapper {
+  margin-bottom: 3px;
+}
+
+.Tags {
+  display: flex;
+  flex-direction: row;
+  gap: 7px;
+  align-items: center;
+  height: 26px;
+}
+
+.DiffBox {
+  background: rgb(0, 128, 85);
+  width: 67px;
+  max-width: 67px;
+  height: 26px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  box-shadow: 0px 1px 2px 0px rgb(0 0 0 / 50%);
+}
+
+.DiffName {
+  text-align: center;
+}
+
+.ModifiersBox {
+  background: rgb(0, 128, 85);
+  height: 26px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  opacity: 0;
+  box-shadow: 0px 1px 2px 0px rgb(0 0 0 / 50%);
+}
+
+.ModifiersText {
+  margin-left: 8px;
+  margin-right: 8px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.SongInfoRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-wrap: nowrap;
+  width: 50px;
+}
+
+.SongKey {
+  margin-top: 12px;
+  margin-bottom: 2px;
+}
+
+.SongPicker {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  width: 48px;
+  height: 48px;
+  box-shadow: 0px 1px 2px 0px rgb(0 0 0 / 50%);
+  border-radius: 15px;
+  opacity: 0;
+  transition: all 0.5s ease-in;
+}
+
+.SongLength {
+  color: white;
+  margin-top: 4px;
+  font-size: 13px;
+}
+
+/* Round Box */
+
+.RoundBox {
+  position: absolute;
+  right: 40px;
+  bottom: 65px;
+  display: flex;
+}
+
+.TextBox {
+  transition: all 0.5s ease-in-out;
+  background-color: #5D4478;
+  height: 46px;
+  direction: rtl;
+  padding-left: 8px;
+  padding-right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  opacity: 0;
+}
+
+.RoundText {
+  font-size: 20px;
+  color: white;
+  text-transform: uppercase;
+}
+
+.LogoImageLocal {
+  display: flex;
+  height: 46px;
+  width: 46px;
+  background-color: #301514;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+}
