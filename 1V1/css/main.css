@@ -10,7 +10,8 @@ body {
 .BGImage {
   width: 1920px;
   height: 1080px;
-  /* background: #5d5d5d; */
+  background: url("../images/Background.png");
+  background-repeat: no-repeat;
   opacity: 1;
   position: absolute;
   top: 0px;
@@ -92,14 +93,14 @@ body {
 .PlayerContainers {
   position: absolute;
   top: 0;
-  height: 108px;
+  height: 156px;
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   opacity: 0;
   transition: all 0.5s ease-in;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0), #000000, rgba(255, 255, 255, 0));
+  /*background: linear-gradient(90deg, rgba(255, 255, 255, 0), #000000, rgba(255, 255, 255, 0));*/
 }
 
 .LogoSpot {
@@ -111,15 +112,14 @@ body {
 
 .LogoImage
 {
+  top: 5px;
   justify-content: center;
   padding: 5px;
   padding-left: 10px;
   padding-right: 10px;
-  border-left: white 3px solid;
-  border-right: white 3px solid;
   position: relative;
   width: auto;
-  height: 100px;
+  height: 132px;
 }
 
 .Player1Container, .Player2Container {
@@ -135,9 +135,16 @@ body {
   justify-content: flex-end;
 }
 
+.imageContainer1{
+  position:relative;
+  transform:skewY(5deg);
+  rotate: -5deg;
+  right:0;
+}
+
 .Player1Image {
   width: auto;
-  height: 84px;
+  height: 111px;
   box-shadow: 0px 1px 6px 1px rgb(0 0 0 / 50%);
   background: linear-gradient(180deg, #2f58c0, #4d90d3) border-box;
   border: 3px solid transparent;
@@ -291,9 +298,16 @@ body {
   border-radius: 8px 0 0 8px;
 }
 
+.imageContainer2{
+  position:relative;
+  transform:skewY(-5deg);
+  rotate: 5deg;
+  left:0;
+}
+
 .Player2Image {
   width: auto;
-  height: 84px;
+  height: 110px;
   box-shadow: 0px 1px 6px 1px rgb(0 0 0 / 50%);
   background: linear-gradient(165deg, #dc6153, #fc8e7f) border-box;
   border: 3px solid transparent;
@@ -410,6 +424,7 @@ body {
 }
 
 /* Song Card */
+/* TODO: UPDATE THIS TO FIT REQUIREMENTS OF BeatKhana*/
 
 #Song {
   width: 1164px;
@@ -424,14 +439,14 @@ body {
 }
 
 .SongCard {
-  height: 125px;
-  width: 550px;
+  height: 150px;
+  width: 700px;
   max-height: 125px;
   max-width: 550px;
   opacity: 0;
   position: absolute;
   bottom: 30px;
-  left: 675px;
+  right: 25px;
 
 }
 

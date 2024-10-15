@@ -1,4 +1,4 @@
-const relayIp = "wss://localhost:2223";
+const relayIp = "wss://yabt.thnght.pro";
 // const relayIp = "wss://api.hawk.quest:2223";
 
 //Player data
