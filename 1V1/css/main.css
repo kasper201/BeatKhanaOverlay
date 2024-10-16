@@ -5,6 +5,7 @@ body {
   overflow: hidden;
   margin: 0;
   padding: 0;
+  color: white;
 }
 
 .BGImage {
@@ -129,7 +130,7 @@ body {
 }
 
 .Player1Container {
-  right: 54%;
+  right: 53%;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -137,19 +138,20 @@ body {
 
 .imageContainer1{
   position:relative;
-  transform:skewY(5deg);
-  rotate: -5deg;
+  transform:skewY(4.5deg);
+  rotate: -4.5deg;
   right:0;
 }
 
 .Player1Image {
   width: auto;
-  height: 111px;
-  box-shadow: 0px 1px 6px 1px rgb(0 0 0 / 50%);
-  background: linear-gradient(180deg, #2f58c0, #4d90d3) border-box;
+  height: 116px;
+  /*   box-shadow: 0px 1px 6px 1px rgb(0 0 0 / 50%); */
+  /*   background: linear-gradient(180deg, #2f58c0, #4d90d3) border-box; */
   border: 3px solid transparent;
   border-radius: 15px;
-  margin-right: 11px;
+  margin-right: 8px;
+  margin-top: 3px;
 }
 
 .Player1Name {
@@ -222,7 +224,7 @@ body {
 }
 
 .Player2Container {
-  left: 54%;
+  left: 53%;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -300,19 +302,20 @@ body {
 
 .imageContainer2{
   position:relative;
-  transform:skewY(-5deg);
-  rotate: 5deg;
+  transform:skewY(-4.5deg);
+  rotate: 4.5deg;
   left:0;
 }
 
 .Player2Image {
   width: auto;
-  height: 110px;
+  height: 116px;
   box-shadow: 0px 1px 6px 1px rgb(0 0 0 / 50%);
-  background: linear-gradient(165deg, #dc6153, #fc8e7f) border-box;
-  border: 3px solid transparent;
+  /*   background: linear-gradient(165deg, #dc6153, #fc8e7f) border-box;
+    border: 3px solid transparent; */
   border-radius: 15px;
-  margin-left: 11px;
+  margin-left: 8px;
+  margin-top: 3px;
 }
 
 /* Score Bounds | FC, Combo, ACC */
@@ -441,53 +444,30 @@ body {
 .SongCard {
   height: 150px;
   width: 700px;
-  max-height: 125px;
+  max-height: 150px;
   max-width: 550px;
   opacity: 0;
   position: absolute;
-  bottom: 30px;
-  right: 25px;
-
-}
-
-.SongCover {
-  background: url('https://eu.cdn.beatsaver.com/cfcdbd060aabc0673f4950506b5170ce59d963bc.jpg') 50% 50% / cover;
-  width: 550px;
-  height: 125px;
-  border-radius: 15px;
-  opacity: 0.5;
-}
-
-.BlurBox {
-  position: relative;
-  top: -125px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  background: #0000007a;
-  width: 550px;
-  height: 125px;
-  border-radius: 14px;
-  transition: all 0.5s ease;
-  overflow: hidden;
+  bottom: 20px;
+  right: 60px;
 }
 
 .SongBox {
   display: flex;
   position: relative;
-  top: -247px;
-  left: 4px;
   gap: 11px;
 }
 
 .SongBoxBG {
-  top: 5px;
   left: 5px;
   background: url('https://eu.cdn.beatsaver.com/cfcdbd060aabc0673f4950506b5170ce59d963bc.jpg') 50% 50% / cover;
-  min-width: 116px;
-  min-height: 116px;
+  min-width: 151px;
+  min-height: 156px;
   border-radius: 15px;
   opacity: 0.9;
   transition: all 0.5s ease;
+  transform: skewY(-5deg);
+  rotate: 5deg;
 }
 
 .SongInfoLeft {
@@ -500,6 +480,7 @@ body {
 
 .SongName {
   margin-bottom: -18px;
+  font-weight: bolder;
 }
 
 .SongMapper {
@@ -583,6 +564,7 @@ body {
 /* Round Box */
 
 .RoundBox {
+  opacity: 0;
   position: absolute;
   right: 40px;
   bottom: 65px;
