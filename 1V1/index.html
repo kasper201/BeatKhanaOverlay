@@ -1,7 +1,6 @@
 <html>
 
 <head>
-	<link href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap" rel="stylesheet">
 	<link href="./css/main.css" rel="stylesheet">
 	<title>1V1 Screen</title>
 	<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
@@ -13,13 +12,13 @@
 		<!--<img src="./images/Background.png" class="Background">-->
 		<div class="PlayerContainers" id="PlayerContainers">
 			<div class="Player1Container" id="Player1Container">
+				<p class="Player1Name" id="Player1Name">OK</p>
 				<div style="display: flex;height: fit-content;flex-direction: column;">
 					<span class="Player1Goal" id="Player1Goal" style="opacity: 0;">TO BEAT: 0%</span>
 					<span class="Player1ReplayText" id="Player1ReplayText" style="opacity: 0;">REPLAY CALLED</span>
 				</div>
 				<span class="Player1ReplayBase" id="Player1ReplayBase">R</span>
 				<span class="Player1Score" id="Player1Score">0</span>
-				<b class="Player1Name" id="Player1Name">OK</b>
 				<div class="imageContainer1" id="imageContainer1">
 					<img src="./images/Placeholder.png" class="Player1Image" id="Player1Image" />
 				</div>
@@ -31,13 +30,13 @@
 				<div class="imageContainer2" id="imageContainer2">
 					<img src="./images/Placeholder.png" class="Player2Image" id="Player2Image" />
 				</div>
-				<b class="Player2Name" id="Player2Name">BOOMER</b>
 				<span class="Player2Score" id="Player2Score">0</span>
 				<span class="Player2ReplayBase" id="Player2ReplayBase">R</span>
 				<div style="display: flex;height: fit-content;flex-direction: column;">
 					<span class="Player2Goal" id="Player2Goal" style="opacity: 0;">TO BEAT: 0%</span>
 					<span class="Player2ReplayText" id="Player2ReplayText" style="opacity: 0;">REPLAY CALLED</span>
 				</div>
+				<p class="Player2Name" id="Player2Name">BOOMER</p>
 			</div>
 		</div>
 
@@ -68,31 +67,21 @@
 		<div id="Song">
 			<div class="SongCard FadeIn" id="SongCard">
 				<div class="SongBox">
-					<div class="TagBox DiffBox FadeIn" id="DiffBox">
-						<p class="DiffName White Txt13" id="DiffName">Easy</p>
-					</div>
+					<p class="SongName" id="SongName">Really Long Song name that is...</p>
 					<div class="SongInfoLeft">
-						<p class="SongName F700 White Txt20 W340 Fade" id="SongName">Breathe</p>
 						<p class="SongMapper White Txt15 W340 Fade" id="SongMapper">Mapped by NightHawk</p>
-						<p class="ReleaseDate" id="ReleaseDate">Released on 2021-09-01</p>
+						<p class="UploadDate" id="UploadDate">Uploaded on 2021-09-01</p>
 					</div>
 					<div class="SongInfoRight">
-						<p class="SongArtist White Txt15 W340 Fade" id="SongArtist">Lauv</p>
-						<img src="./images/Placeholder.png" class="SongPicker" id="SongPicker">
-						<p class="SongLength White Txt13" id="SongLength">3:59</p>
+						<p class="SongArtist" id="SongArtist">Lauv</p>
+						<p class="SongLength" id="SongLength">3:59</p>
+						<p class="DiffName" id="DiffName">ABC</p>
 					</div>
 					<div class="SongCover" id="SongCover"></div>
 					<div class="SongBoxBG" id="SongBoxBG"></div>
 				</div>
 			</div>
 		</div>
-
-		<div class="RoundBox">
-			<div class="TextBox" id="TextBox">
-				<p class="RoundText" id="RoundText">NO ROUND SET</p>
-			</div>
-		</div>
-
 	</div>
 
 	<script src="./js/MainHandlers.js"></script>
