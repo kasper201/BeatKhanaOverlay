@@ -488,7 +488,7 @@ body {
 .SongInfoLeft {
   margin-top: 44px;
   margin-left: 25px;
-  font-size:19;
+  font-size: 19px;
 }
 
 .SongMapper {
@@ -514,9 +514,14 @@ body {
 
 .SongLength {
   color: white;
-  font-size: 13px;
+  font-size: 19px;
+  margin-top: -13px;
 }
 
 .DiffName {
+  position: absolute;
   text-align: center;
+  right: -5px;
+  bottom: -10px;
+  z-index: 100;
 }
