@@ -1,4 +1,7 @@
-async function getMap(LevelId, LevelDiff, Modifiers, Player) {
+import { fancyTimeFormat } from './FormatHandlers.js';
+export let songData = ["",0];
+
+async function getMap(LevelId, LevelDiff) {
 
 	switch (LevelDiff) {
 		case 0:
@@ -41,22 +44,9 @@ async function getMap(LevelId, LevelDiff, Modifiers, Player) {
 				document.getElementById("SongArtist").innerText = data.metadata.levelAuthorName.replaceAll('\n', '').replaceAll('\r', '');
 				document.getElementById("SongName").innerText = data.metadata.songName.replaceAll('\n', '').replaceAll('\r', '');
 				document.getElementById("SongMapper").innerText = data.metadata.songAuthorName.replaceAll('\n', '').replaceAll('\r', '');
-				document.getElementById("SongKey").innerText = data.id.replaceAll('\n', '').replaceAll('\r', '');
-				document.getElementById("DiffBox").style.background = diffColor;
 				document.getElementById("DiffName").innerHTML = diffText.replaceAll('\n', '').replaceAll('\r', '');
 				document.getElementById("SongLength").innerText = fancyTimeFormat(data.metadata.duration).replaceAll('\n', '').replaceAll('\r', '');
-				document.getElementById("PickedBy").innerHTML = `Picked by ${Player}`;
 
-				if (Modifiers == "None") {
-					document.getElementById("ModifiersBox").style.display = "none";
-					document.getElementById("ModifiersBox").style.opacity = "0";
-					document.getElementById("ModifiersText").innerText = "";
-				} else {
-					document.getElementById("ModifiersText").innerText = Modifiers;
-					document.getElementById("ModifiersBox").style.background = diffColor;
-					document.getElementById("ModifiersBox").style.display = "flex";
-					document.getElementById("ModifiersBox").style.opacity = "1";
-				}
 				setTimeout(function () {
 					document.getElementById("SongCard").style.opacity = "1";
 				}, 500);
@@ -74,15 +64,9 @@ async function getMap(LevelId, LevelDiff, Modifiers, Player) {
 			document.getElementById("DiffBox").style.background = diffColor;
 			document.getElementById("DiffName").innerHTML = diffText;
 			document.getElementById("DiffBox").style.opacity = "1";
-			if (Modifiers != "None") {
-				document.getElementById("ModifiersText").innerText = Modifiers;
-				document.getElementById("ModifiersBox").style.background = diffColor;
-				document.getElementById("ModifiersBox").style.display = "flex";
-				document.getElementById("ModifiersBox").style.opacity = "1";
-			} else {
-				document.getElementById("ModifiersBox").style.display = "none";
-			}
 			document.getElementById("PickedBy").style.opacity = "1";
 		}, 1000);
 	}
 }
+
+export { getMap };

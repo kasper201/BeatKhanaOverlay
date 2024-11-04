@@ -1,18 +1,20 @@
 
 //Player data
-let playerNames = ["",""];
-let playerIDs = [];
-let playerScore = [0, 0];
-let playerAcc = [0.0, 0.0];
-let playerCombo = [0, 0];
-let playerMisses = [0, 0];
-let playerFC = [true,true];
-let replayLeft = [1, 1];
-let replaying = [0, 0];
-let scoreLine = [0, 0];
+// let playerNames = ["",""];
+// let playerIDs = [];
+import {Match} from "moons-ta-client";
 
+export let playerMisses = [0, 0];
+export let playerFC = [true,true];
 //Current song data
-let songData = ["",0];
+
+export let playerNames = [];
+export let playerIDs = [];
+
+export function setPlayerInfo(playerIds, playerNames) {
+    playerIDs = playerIds;
+    playerNames = playerNames;
+}
 
 // const ws = new WebSocket(relayIp);
 // ws.onopen = function () {

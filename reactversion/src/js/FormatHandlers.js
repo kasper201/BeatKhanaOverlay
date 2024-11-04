@@ -1,5 +1,11 @@
 //Used to format map-length to a readable format.
-function fancyTimeFormat(duration) {
+import './UserScoringHandlers.js';
+import {playerAcc} from "./UserScoringHandlers";
+
+export let scoreLine = [0, 0];
+export let replayLeft = [1, 1];
+export let replaying = [0, 0];
+export function fancyTimeFormat(duration) {
 	var hrs = ~~(duration / 3600);
 	var mins = ~~((duration % 3600) / 60);
 	var secs = ~~duration % 60;
