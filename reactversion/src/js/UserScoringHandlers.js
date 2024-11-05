@@ -3,7 +3,7 @@ import { playerIDs } from "./MainHandlers.js";
 export let playerScore = [0, 0];
 export let playerAcc = [0.0, 0.0];
 export let playerCombo = [0, 0];
-function scoreUpdate(player, score, combo, acc, misses, reset) {
+function scoreUpdate(player, score, combo, acc, misses, reset, songPosition) {
 	if (playerIDs[0] === player) {
 		updatePlayerData(0, score, combo, acc, misses);
 	} else if (playerIDs[1] === player) {
@@ -16,7 +16,7 @@ function scoreUpdate(player, score, combo, acc, misses, reset) {
 }
 
 function updatePlayerData(index, score, combo, acc, misses) {
-	playerAcc[index] = acc.toFixed(2);
+	playerAcc[index] = (acc * 100).toFixed(2);
 	playerCombo[index] = combo;
 	playerScore[index] = score;
 	// playerMisses[index] = misses;
@@ -25,6 +25,7 @@ function updatePlayerData(index, score, combo, acc, misses) {
 
 	document.getElementById(`Player${index + 1}Combo`).innerHTML = playerCombo[index] + "x";
 	document.getElementById(`Player${index + 1}ACC`).innerHTML = playerAcc[index] + "%";
+	document.getElementById(`Player${index + 1}FC`).innerHTML = playerScore[index];
 
 	// if (misses >= 1) {
 	// 	document.getElementById(`Player${index + 1}FC`).style.color = "#d15252";
@@ -75,14 +76,20 @@ function updateTug() {
 	if (diff < 0) {
 		rightTug.style.width = "0%";
 		leftTug.style.width = `${percentage}%`;
+		document.getElementById(`Player1ACC`).style.fontSize = ((1+(Math.abs(diff)/400)) * 47) + "px";
+		document.getElementById(`Player2ACC`).style.fontSize = ((1-(0.1-diff/800)) * 47) + "px";
 		return;
 	} else if (diff > 0) {
 		leftTug.style.width = "0%";
 		rightTug.style.width = `${percentage}%`;
+		document.getElementById(`Player1ACC`).style.fontSize = ((1-(0.1-diff/800)) * 47) + "px";
+		document.getElementById(`Player2ACC`).style.fontSize = ((1+(Math.abs(diff)/400)) * 47) + "px";
 		return;
 	} else {
 		leftTug.style.width = "0%"
 		rightTug.style.width = "0%";
+		document.getElementById(`Player1ACC`).style.fontSize = 47 + "px";
+		document.getElementById(`Player2ACC`).style.fontSize = 47 + "px";
 		return;
 	}
 }

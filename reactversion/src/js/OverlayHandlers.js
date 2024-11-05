@@ -1,31 +1,27 @@
-// import App from "../App";
-// async function setOverlay(playerIDs, playerNames) {
-//     playerIDs = [playerIDs[0], playerIDs[1]];
-//     document.getElementById("player1Name").innerText = playerNames[0];
-// 	// document.getElementById("TextBox").style.opacity = "0";
-// 	// fetch('https://skillsaber.vercel.app/api/player?id=' + playerIDs[0])
-// 	// 	.then(response => response.json())
-// 	// 	.then(data => {
-// 	// 		document.getElementById("Player1Image").src = data.profilePicture;
-// 	// 		document.getElementById("Player1Name").innerText = playerNames[0];
-// 	// 		document.getElementById("Player1Name").style.opacity = '1';
-// 	// 	});
-// 	// fetch('https://skillsaber.vercel.app/api/player?id=' + playerIDs[1])
-// 	// 	.then(response => response.json())
-// 	// 	.then(data => {
-// 	// 		document.getElementById("Player2Image").src = data.profilePicture;
-// 	// 		document.getElementById("Player2Name").innerText = playerNames[1];
-// 	// 		document.getElementById("Player2Name").style.opacity = '1';
-// 	//
-// 	// 		document.getElementById("PlayerContainers").style.opacity = 1;
-// 	// 		document.getElementById("PlayerBounds").style.opacity = 1;
-// 	// 		document.getElementById("TugOfWar").style.opacity = 1;
-// 	// 		// document.getElementById("TextBox").style.opacity = "1";
-// 	// 	});
-// }
-//
-// export { setOverlay };
-async function setOverlay(playerIDs, playerNames) {
+async function getImage(platformID) {
+    try {
+        const response = await fetch(`http://api.beatkhana.com/api/getUserByBeatleader/${platformID}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const text = await response.text();
+        if (!text) {
+            throw new Error("Empty response body");
+        }
+        const data = JSON.parse(text);
+        if (Array.isArray(data) && data.length > 0) {
+            console.log(data[0]);
+            return data[0].avatarurl;
+        } else {
+            throw new Error("Invalid response structure");
+        }
+    } catch (error) {
+        console.error("Failed to fetch image:", error);
+        return "./images/Placeholder.png"; // Fallback image
+    }
+}
+
+async function setOverlay(playerIDs, playerNames, platformIDs) {
     playerIDs = [playerIDs[0], playerIDs[1]];
 
     const player1ImageElement = document.getElementById("Player1Image");
@@ -45,6 +41,8 @@ async function setOverlay(playerIDs, playerNames) {
         player1NameElement.style.opacity = '1';
 
         // set player images
+        player1ImageElement.src = await getImage(platformIDs[0]);
+        player2ImageElement.src = await getImage(platformIDs[1]);
 
         player2NameElement.innerText = playerNames[1];
         player2NameElement.style.opacity = '1';
