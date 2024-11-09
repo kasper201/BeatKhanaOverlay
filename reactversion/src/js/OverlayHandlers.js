@@ -2,18 +2,18 @@ async function getImage(platformID) {
     try {
         const response = await fetch(`http://api.beatkhana.com/api/getUserByBeatleader/${platformID}`);
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            new Error(`HTTP error! status: ${response.status}`);
         }
         const text = await response.text();
         if (!text) {
-            throw new Error("Empty response body");
+            new Error("Empty response body");
         }
         const data = JSON.parse(text);
         if (Array.isArray(data) && data.length > 0) {
             console.log(data[0]);
             return data[0].avatarurl;
         } else {
-            throw new Error("Invalid response structure");
+            new Error("Invalid response structure");
         }
     } catch (error) {
         console.error("Failed to fetch image:", error);
@@ -40,9 +40,22 @@ async function setOverlay(playerIDs, playerNames, platformIDs) {
         player1NameElement.innerText = playerNames[0];
         player1NameElement.style.opacity = '1';
 
+        let playerImage = [];
+        playerImage[0] = await getImage(platformIDs[0]);
+        playerImage[1] = await getImage(platformIDs[1]);
         // set player images
-        player1ImageElement.src = await getImage(platformIDs[0]);
-        player2ImageElement.src = await getImage(platformIDs[1]);
+        if(!platformIDs[0] || !playerImage[0]){
+            console.error("Invalid platform ID:", platformIDs[0]);
+            player1ImageElement.src = "./images/Placeholder.png"; // Fallback image
+        } else {
+            player1ImageElement.src = playerImage[0];
+        }
+        if(!platformIDs[1] || !playerImage[1]){
+            console.error("Invalid platform ID:", platformIDs[1]);
+            player2ImageElement.src = "./images/Placeholder.png"; // Fallback image
+        } else {
+            player2ImageElement.src = playerImage[1];
+        }
 
         player2NameElement.innerText = playerNames[1];
         player2NameElement.style.opacity = '1';

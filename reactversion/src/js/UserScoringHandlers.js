@@ -1,8 +1,11 @@
-import { playerIDs } from "./MainHandlers.js";
+import {playerIDs, setPlayerInfo} from "./MainHandlers.js";
+import {User_ClientTypes} from "moons-ta-client";
+import {setOverlay} from "./OverlayHandlers";
 
 export let playerScore = [0, 0];
 export let playerAcc = [0.0, 0.0];
 export let playerCombo = [0, 0];
+export let playerWinScore = [0, 0];
 function scoreUpdate(player, score, combo, acc, misses, reset, songPosition) {
 	if (playerIDs[0] === player) {
 		updatePlayerData(0, score, combo, acc, misses);
@@ -42,6 +45,8 @@ function resetAllPlayers() {
 	playerScore = [0, 0];
 	playerAcc = [0, 0];
 	playerCombo = [0, 0];
+	playerWinScore = [0, 0];
+	playerIDs = [0, 0];
 	// playerMisses = [0, 0];
 
 	updateTug();
@@ -94,4 +99,21 @@ function updateTug() {
 	}
 }
 
-export { scoreUpdate, updatePlayerData, resetAllPlayers, updateTug };
+function updateScores(user, score)
+{
+
+}
+
+function userWinScore(player)
+{
+	if(playerIDs[0] === player) {
+		playerWinScore[player] += 1;
+	} else if(playerIDs[1] === player) {
+		playerWinScore[player] += 1;
+	} else {
+		console.error("Invalid player ID");
+	}
+
+}
+
+export { scoreUpdate, updatePlayerData, resetAllPlayers, updateTug, userWinScore };

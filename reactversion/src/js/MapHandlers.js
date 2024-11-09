@@ -38,6 +38,10 @@ async function getMap(LevelId, LevelDiff) {
 			});
 			const data = await response.json();
 
+			if (!LevelId) {
+				console.error('Invalid LevelId:', LevelId);
+				return;
+			}
 			setTimeout(function () {
 				document.getElementById("SongCover").style.background = `url('https://eu.cdn.beatsaver.com/${LevelId.toLowerCase()}.jpg') 50% 50% / cover`;
 				document.getElementById("SongBoxBG").style.background = `url('https://eu.cdn.beatsaver.com/${LevelId.toLowerCase()}.jpg') 50% 50% / cover`;
