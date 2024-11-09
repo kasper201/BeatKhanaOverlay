@@ -6,6 +6,8 @@ export let playerScore = [0, 0];
 export let playerAcc = [0.0, 0.0];
 export let playerCombo = [0, 0];
 export let playerWinScore = [0, 0];
+let playerHadSkip = [false, false];
+let playerHadReplay = [false, false];
 function scoreUpdate(player, score, combo, acc, misses, reset, songPosition) {
 	if (playerIDs[0] === player) {
 		updatePlayerData(0, score, combo, acc, misses);
@@ -101,19 +103,127 @@ function updateTug() {
 
 function updateScores(user, score)
 {
-
+	let scoreCountElement = [[], []]; // Initialize with empty arrays
+	let backgroundColour = ["#f6d16a", "#d91e36"];
+	for(let i = 0; i < 3; i++)
+	{
+		scoreCountElement[0][i] = document.getElementById(`Player1Score${i}`);
+		scoreCountElement[1][i] = document.getElementById(`Player1Score${i}`);
+	}
+	if(score === 0)
+	{
+		scoreCountElement[user][0].style.background = "transparent";
+		scoreCountElement[user][1].style.background = "transparent";
+		scoreCountElement[user][2].style.background = "transparent";
+	}
+	else if(score === 1)
+	{
+		scoreCountElement[user][0].style.background = backgroundColour[user];
+		scoreCountElement[user][1].style.background = "transparent";
+		scoreCountElement[user][2].style.background = "transparent";
+	}
+	else if(score === 2)
+	{
+		scoreCountElement[user][0].style.background = backgroundColour[user];
+		scoreCountElement[user][1].style.background = backgroundColour[user];
+		scoreCountElement[user][2].style.background = "transparent";
+	}
+	else if(score === 3)
+	{
+		scoreCountElement[user][0].style.background = backgroundColour[user];
+		scoreCountElement[user][1].style.background = backgroundColour[user];
+		scoreCountElement[user][2].style.background = backgroundColour[user];
+	}
+	else
+	{
+		console.error("Invalid score value");
+	}
 }
 
 function userWinScore(player)
 {
 	if(playerIDs[0] === player) {
 		playerWinScore[player] += 1;
+		updateScores(0, playerWinScore[player]);
 	} else if(playerIDs[1] === player) {
 		playerWinScore[player] += 1;
+		updateScores(1, playerWinScore[player]);
 	} else {
 		console.error("Invalid player ID");
 	}
-
 }
 
-export { scoreUpdate, updatePlayerData, resetAllPlayers, updateTug, userWinScore };
+function handleSkip(player)
+{
+	let playerSkip = [null, null];
+	playerSkip[0] = document.getElementById("Player1SkipBase");
+	playerSkip[1] = document.getElementById("Player2SkipBase");
+	if(player === 0)
+	{
+		if(playerHadSkip[0] === true) {
+			playerSkip[0].style.background = `url(${window.location.origin}/images/skillreplay/L_YesSkip.svg`;
+			playerHadSkip[0] = false;
+		} else {
+			playerSkip[0].style.background = `url(${window.location.origin}/images/skillreplay/L_NoSkip.svg`;
+			playerHadSkip[0] = true;
+		}
+	}
+	else if(player === 1)
+	{
+		if(playerHadSkip[1] === true) {
+			playerSkip[1].style.background = `url(${window.location.origin}/images/skillreplay/R_YesSkip.svg`;
+			playerHadSkip[1] = false;
+		} else {
+			playerSkip[1].style.background = `url(${window.location.origin}/images/skillreplay/R_NoSkip.svg`;
+			playerHadSkip[1] = true;
+		}
+	}
+	else
+	{
+		console.error("Invalid player ID");
+	}
+}
+
+function handleReplay(player)
+{
+	let playerReplay = [null, null];
+	playerReplay[0] = document.getElementById("Player1ReplayBase");
+	playerReplay[1] = document.getElementById("Player2ReplayBase");
+	if(player === 0)
+	{
+		if(playerHadReplay[0] === true)
+		{
+			playerReplay[0].style.background = `url(${window.location.origin}/images/skillreplay/L_NoReplay.svg)`;
+			userWinScore(1);
+			playerHadReplay[0] = false;
+		} else {
+			playerReplay[0].style.background = `url(${window.location.origin}/images/skillreplay/L_YesReplay.svg)`;
+			if (playerWinScore !== null) {
+				playerWinScore[1] -= 1;
+				updateScores(1, playerWinScore[1]);
+				playerHadReplay[0] = true;
+			}
+		}
+	}
+	else if(player === 1)
+	{
+		if(playerHadReplay[0] === true)
+		{
+			playerReplay[1].style.background = `url(${window.location.origin}/images/skillreplay/R_NoReplay.svg)`;
+			userWinScore(0);
+			playerHadReplay[1] = false;
+		} else {
+			playerReplay[1].style.background = `url(${window.location.origin}/images/skillreplay/R_YesReplay.svg)`;
+			if (playerWinScore !== null) {
+				playerWinScore[0] -= 1;
+				updateScores(0, playerWinScore[0]);
+				playerHadReplay[1] = true;
+			}
+		}
+	}
+	else {
+		console.error("Invalid player ID");
+	}
+}
+
+export { scoreUpdate, updatePlayerData, resetAllPlayers, updateTug, userWinScore, handleSkip, handleReplay };
