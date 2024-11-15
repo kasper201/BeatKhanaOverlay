@@ -21,6 +21,20 @@ async function getImage(platformID) {
     }
 }
 
+async function getTwitchID(platformID)
+{
+    const response = await fetch(`http://api.beatkhana.com/api/getUserByBeatleader/${platformID}`);
+    if (!response.ok) {
+        new Error(`HTTP error! status: ${response.status}`);
+    }
+    const text = await response.text();
+    if (!text) {
+        new Error("Empty response body");
+    }
+    const data = JSON.parse(text);
+    return data[0].twitchname;
+}
+
 async function setOverlay(playerIDs, playerNames, platformIDs) {
     playerIDs = [playerIDs[0], playerIDs[1]];
 
@@ -29,6 +43,9 @@ async function setOverlay(playerIDs, playerNames, platformIDs) {
 
     const player2ImageElement = document.getElementById("Player2Image");
     const player2NameElement = document.getElementById("Player2Name");
+
+    const player1iframe = document.getElementById("player1iframe");
+    const player2iframe = document.getElementById("player2iframe");
 
     const playerContainersElement = document.getElementById("PlayerContainers");
     const playerBoundsElement = document.getElementById("PlayerBounds");
@@ -43,6 +60,7 @@ async function setOverlay(playerIDs, playerNames, platformIDs) {
         let playerImage = [];
         playerImage[0] = await getImage(platformIDs[0]);
         playerImage[1] = await getImage(platformIDs[1]);
+
         // set player images
         if(!platformIDs[0] || !playerImage[0]){
             console.error("Invalid platform ID:", platformIDs[0]);
@@ -60,6 +78,10 @@ async function setOverlay(playerIDs, playerNames, platformIDs) {
         player2NameElement.innerText = playerNames[1];
         player2NameElement.style.opacity = '1';
 
+        // // set iframe
+        // player1iframe.src = "https://player.twitch.tv/?channel=" + await getTwitchID(platformIDs[0]) + "&height=1080&parent=" + window.location.hostname + "&scrolling&width=1920";
+        // player2iframe.src = "https://player.twitch.tv/?channel=" + await getTwitchID(platformIDs[1]) + "&height=1080&parent=" + window.location.hostname + "&scrolling&width=1920";
+
         // set player containers
         playerContainersElement.style.opacity = '1';
         playerBoundsElement.style.opacity = '1';
@@ -71,4 +93,4 @@ async function setOverlay(playerIDs, playerNames, platformIDs) {
     // Additional code to fetch and update player images and other elements
 }
 
-export { setOverlay };
+export { setOverlay, getTwitchID };
