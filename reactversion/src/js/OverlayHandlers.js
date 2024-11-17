@@ -44,9 +44,6 @@ async function setOverlay(playerIDs, playerNames, platformIDs) {
     const player2ImageElement = document.getElementById("Player2Image");
     const player2NameElement = document.getElementById("Player2Name");
 
-    const player1iframe = document.getElementById("player1iframe");
-    const player2iframe = document.getElementById("player2iframe");
-
     const playerContainersElement = document.getElementById("PlayerContainers");
     const playerBoundsElement = document.getElementById("PlayerBounds");
     const tugOfWarElement = document.getElementById("TugOfWar");
@@ -78,9 +75,7 @@ async function setOverlay(playerIDs, playerNames, platformIDs) {
         player2NameElement.innerText = playerNames[1];
         player2NameElement.style.opacity = '1';
 
-        // // set iframe
-        // player1iframe.src = "https://player.twitch.tv/?channel=" + await getTwitchID(platformIDs[0]) + "&height=1080&parent=" + window.location.hostname + "&scrolling&width=1920";
-        // player2iframe.src = "https://player.twitch.tv/?channel=" + await getTwitchID(platformIDs[1]) + "&height=1080&parent=" + window.location.hostname + "&scrolling&width=1920";
+        window.setPlayerChannels(getTwitchID(platformIDs[0]), getTwitchID(platformIDs[1]));
 
         // set player containers
         playerContainersElement.style.opacity = '1';
@@ -89,7 +84,6 @@ async function setOverlay(playerIDs, playerNames, platformIDs) {
     } else {
         console.error("Player name elements not found in the DOM");
     }
-
     // Additional code to fetch and update player images and other elements
 }
 

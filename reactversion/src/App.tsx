@@ -7,19 +7,27 @@ import './js/FormatHandlers.js';
 import { songData, getMap } from './js/MapHandlers.js';
 import {resetAllPlayers, scoreUpdate, userWinScore, handleSkip, handleReplay} from "./js/UserScoringHandlers";
 
-import { setOverlay } from './js/OverlayHandlers.js';
+import {getTwitchID, setOverlay} from './js/OverlayHandlers.js';
 
 // TA client thingy
 import {Tournament, Match, Response_ResponseType, TAClient, User_ClientTypes} from 'moons-ta-client';
 import {wait} from "@testing-library/user-event/dist/utils";
 
-const taToken = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjRFOTc0RUE5RTk4RkI5MzJFRUNBOEEyODc0MjBBOThCMjg4M0JEREIiLCJ4NXQiOiJUcGRPcWVtUHVUTHV5b29vZENDcGl5aUR2ZHMiLCJ0eXAiOiJKV1QifQ.eyJpYXQiOiIxNzMxNTI2OTI5IiwiZXhwIjoiMjA0NzA1OTcyOSIsInRhOmRpc2NvcmRfaWQiOiJhNjhlYzYxOS1iMThhLTQ4NTUtYTI2My00MzUwOGM2YTY3YzAiLCJ0YTpkaXNjb3JkX25hbWUiOiJ0ZXN0Qm90RmxpdHMiLCJ0YTpkaXNjb3JkX2F2YXRhciI6IiIsImlzcyI6InRhX3NlcnZlciIsImF1ZCI6InRhX3VzZXJzIn0.JEnCRcSmiXRZ0OjEerCrtmvyq8JjVfiZH9mtkC7DKNf9G7Zu0J2k6jNiOWNGU9YEUmLtZwjEk77RNwrE4MSztWHOwcwDrIGk7ViYyinis10uKGpOpojP_teJC4G0t9WTvSzVQBzxSkh0m4pCcx3u7HDihszV0bRdtM1ww_yOTYwXFJJtym2CEK2G_iQvl47hpH5M8Q5cW12SFfvzVcQy308ZiWuwgItT7QDvWIv2MoH9tc6iQ20GJ3NpOnGtpQxC1GimYDJ2XXgNnvL3aC_VlVckBL-JsmS3TN69_KcgkErDRk1dSDChj8ZC8GInDTlKlrQG702oV1mZd2bA528fJQ";
+// Ensure Twitch is available globally
+declare global {
+  interface Window {
+    Twitch: any;
+    switchAudio: () => void;
+    setPlayerChannels: (player1Channel: string, player2Channel: string) => void;
+  }
+}
+
+const taToken = "notForYou:)";
 
 let myTourney: Tournament;
 export let client: TAClient;
 let nextMatchNr = 0;
 let currentMatch: Match;
-let audioSwitch = false;
 
 async function addUsers(client: TAClient, myTourney: Tournament, matchNr: number)
 {
@@ -45,13 +53,14 @@ async function nextMatch()
   //   await client.removeUserFromMatch(myTourney.guid, match.guid, client.stateManager.getSelfGuid());
   // }
   console.log(currentMatch);
+  window.setPlayerChannels("hamiltun", "wdg_mid");
   if(currentMatch === undefined) return;
   let match = client.stateManager.getMatches(myTourney.guid)![(nextMatchNr > 1)? nextMatchNr - 1 : 0];
   await client.removeUserFromMatch(myTourney.guid, match!.guid!, client.stateManager.getSelfGuid());
   console.log("Removed user from match");
   await addUsers(client, myTourney, nextMatchNr);
-    console.log("Next match");
-    console.log(nextMatchNr);
+  console.log("Next match");
+  console.log(nextMatchNr);
 }
 
 function App() {
@@ -66,107 +75,167 @@ function App() {
     }
   };
   let [taClient, setTaClient] = React.useState<TAClient>();
+
   React.useEffect(() => {
-    let userScores: {userGuid: string | undefined, score: number} = {userGuid: "", score: 0};
-    const createTaClient = async() => {
-
-      // Create a tournament assistant client
-      client = new TAClient();
-
-      client.on("realtimeScore", (score) => {
-        console.log(score);
-        scoreUpdate(score["userGuid"], score["score"], score["combo"], score["accuracy"], score["notesMissed"], 0, score["songPosition"]);
-      });
-
-      client.on("songFinished", async(songFinished) => {
-        console.log("Song finished");
-        if(songFinished["matchId"] !== currentMatch?.guid) return;
-        if(userScores.userGuid === "")
-        {
-          userScores = {userGuid: songFinished.player!.guid, score: songFinished.score};
+    const loadTwitchScript = () => {
+      return new Promise((resolve, reject) => {
+        if (document.getElementById('twitch-embed-script')) {
+          return;
         }
-        if(userScores.score < songFinished.score)
-        {
-          userWinScore(songFinished.player!.guid);
-          userScores = {userGuid: "", score: 0};
-        }
-        else
-        {
-          userWinScore(userScores.userGuid);
-          userScores = {userGuid: "", score: 0};
-        }
+        const script = document.createElement('script');
+        script.id = 'twitch-embed-script';
+        script.src = "https://player.twitch.tv/js/embed/v1.js";
+        script.async = true;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.body.appendChild(script);
       });
-
-      client.stateManager.on("matchUpdated",  async([match, tournament]: [Match, Tournament]) => {
-        console.log("Updated match");
-        let levelID = match.selectedMap?.gameplayParameters?.beatmap?.levelId.toLowerCase().slice(13);
-        let levelDiff = match.selectedMap?.gameplayParameters?.beatmap?.difficulty;
-        getMap(levelID, levelDiff);
-      });
-
-      client.stateManager.on("matchCreated",  async([match, tournament]: [Match, Tournament]) => {
-        console.log("Created match");
-        if(currentMatch === undefined)
-        {
-          console.log("Match created");
-          addUsers(client, tournament, nextMatchNr);
-        }
-      });
-
-      client.stateManager.on("matchDeleted",  async([match, tournament]: [Match, Tournament]) => {
-        console.log("Deleted match");
-        if(currentMatch?.guid === match?.guid)
-        {
-          // currentMatch = undefined;
-          resetAllPlayers();
-        }
-      });
-
-      client.on("failedToCreateMatch", (score) => {
-        console.log("failed to create Match");
-      });
-
-      // Set the authorisation token to ta token
-      client.setAuthToken(taToken!);
-
-      // Connect to the tournamentassistant server
-      // const response = await client.connect("dev.tournamentassistant.net", "8676"); // if using dev server
-      const response = await client.connect("server.tournamentassistant.net", "8676");
-      console.log(response);
-
-      // Check if the connection is successful and the auth token is valid
-      if (response.details.oneofKind === "connect" && response.type !== Response_ResponseType.Success) {
-        console.log(response.details.connect.message); // Provide user with error message if connection is unsuccessful
-      }
-
-      await wait(1000); // Wait for the connection to be established
-
-      // Create a tournament instance which we will then use
-      myTourney = client.stateManager.getTournaments().find(x => x.settings?.tournamentName === "Moon's Test Tourney")!;
-
-      // Join the tournament
-      if (myTourney) {
-        await client.joinTournament(myTourney.guid);
-        console.log("actually joined tournament");
-      } else {
-        console.log("No tournament found with that name");
-      }
-
-      // Check if the tournament exists
-      if (!myTourney) {
-        console.log("No tournament found with that name");
-      } else {
-        // Print the currently connected users
-        console.log(client.stateManager.getUsers(myTourney.guid));
-        console.log(client.stateManager.getMatches(myTourney.guid));
-      }
-
-      addUsers(client, myTourney, nextMatchNr);
-    setTaClient(client);
     };
-    console.log("Creating TA client");
-    createTaClient();
+
+
+    const initializeTwitchPlayers = () => {
+      const player1 = new window.Twitch.Embed("player1Video", {
+        width: "120%",
+        height: "120%",
+        channel: "yetanotherbt",
+        layout: "video",
+        autoplay: true,
+        muted: false,
+        parent: [window.location.hostname]
+      });
+
+      const player2 = new window.Twitch.Embed("player2Video", {
+        width: "120%",
+        height: "120%",
+        channel: "yetanotherbt",
+        layout: "video",
+        autoplay: true,
+        muted: true,
+        parent: [window.location.hostname]
+      });
+
+      // Function to switch audio between players
+      function switchAudio() {
+        const isPlayer1Muted = player1.getMuted();
+        player1.setMuted(!isPlayer1Muted);
+        player2.setMuted(isPlayer1Muted);
+      }
+
+      function setPlayerChannels(player1Channel: string, player2Channel: string) {
+        player1.setChannel(player1Channel);
+        player2.setChannel(player2Channel);
+      }
+
+      window.setPlayerChannels = setPlayerChannels;
+      window.switchAudio = switchAudio;
+    };
+
+    loadTwitchScript().then(initializeTwitchPlayers).catch((error) => {
+        console.error("Failed to load Twitch script:", error);
+      });
+
+      let userScores: {userGuid: string | undefined, score: number} = {userGuid: "", score: 0};
+      const createTaClient = async() => {
+
+        // Create a tournament assistant client
+        client = new TAClient();
+
+        client.on("realtimeScore", (score) => {
+          console.log(score);
+          scoreUpdate(score["userGuid"], score["score"], score["combo"], score["accuracy"], score["notesMissed"], 0, score["songPosition"]);
+        });
+
+        client.on("songFinished", async(songFinished) => {
+          console.log("Song finished");
+          if(songFinished["matchId"] !== currentMatch?.guid) return;
+          if(userScores.userGuid === "")
+          {
+            userScores = {userGuid: songFinished.player!.guid, score: songFinished.score};
+          }
+          if(userScores.score < songFinished.score)
+          {
+            userWinScore(songFinished.player!.guid);
+            userScores = {userGuid: "", score: 0};
+          }
+          else
+          {
+            userWinScore(userScores.userGuid);
+            userScores = {userGuid: "", score: 0};
+          }
+        });
+
+        client.stateManager.on("matchUpdated",  async([match, tournament]: [Match, Tournament]) => {
+          console.log("Updated match");
+          let levelID = match.selectedMap?.gameplayParameters?.beatmap?.levelId.toLowerCase().slice(13);
+          let levelDiff = match.selectedMap?.gameplayParameters?.beatmap?.difficulty;
+          getMap(levelID, levelDiff);
+        });
+
+        client.stateManager.on("matchCreated",  async([match, tournament]: [Match, Tournament]) => {
+          console.log("Created match");
+          if(currentMatch === undefined)
+          {
+            console.log("Match created");
+            addUsers(client, tournament, nextMatchNr);
+          }
+        });
+
+        client.stateManager.on("matchDeleted",  async([match, tournament]: [Match, Tournament]) => {
+          console.log("Deleted match");
+          if(currentMatch?.guid === match?.guid)
+          {
+            // currentMatch = undefined;
+            resetAllPlayers();
+          }
+        });
+
+        client.on("failedToCreateMatch", (score) => {
+          console.log("failed to create Match");
+        });
+
+        // Set the authorisation token to ta token
+        client.setAuthToken(taToken!);
+
+        // Connect to the tournamentassistant server
+        // const response = await client.connect("dev.tournamentassistant.net", "8676"); // if using dev server
+        const response = await client.connect("server.tournamentassistant.net", "8676");
+        console.log(response);
+
+        // Check if the connection is successful and the auth token is valid
+        if (response.details.oneofKind === "connect" && response.type !== Response_ResponseType.Success) {
+          console.log(response.details.connect.message); // Provide user with error message if connection is unsuccessful
+        }
+
+        await wait(1000); // Wait for the connection to be established
+
+        // Create a tournament instance which we will then use
+        myTourney = client.stateManager.getTournaments().find(x => x.settings?.tournamentName === "Moon's Test Tourney")!;
+
+        // Join the tournament
+        if (myTourney) {
+          await client.joinTournament(myTourney.guid);
+          console.log("actually joined tournament");
+        } else {
+          console.log("No tournament found with that name");
+        }
+
+        // Check if the tournament exists
+        if (!myTourney) {
+          console.log("No tournament found with that name");
+        } else {
+          // Print the currently connected users
+          console.log(client.stateManager.getUsers(myTourney.guid));
+          console.log(client.stateManager.getMatches(myTourney.guid));
+        }
+
+        // Add users to the match
+        addUsers(client, myTourney, nextMatchNr);
+        setTaClient(client);
+      };
+      console.log("Creating TA client");
+      createTaClient();
   }, []);
+
   return (
       <body className="BGImage">
       <div className="MainClass">
@@ -210,24 +279,18 @@ function App() {
             await nextMatch();
           }}>
           </button>
+          <button className={"MuteButton"} id={"MuteButton"} onClick={() => {
+            console.log("Mute button pressed");
+            window.switchAudio();
+          }}></button>
 
         </div>
 
         {/* Streams */}
-        <iframe
-            width="100%"
-            height="100%"
-            frameBorder="0"
-            src=""
-            id="player1iframe"
-        ></iframe>
-        <iframe
-            width="100%"
-            height="100%"
-            frameBorder="0"
-            src=""
-            id="player2iframe"
-        ></iframe>
+        <div className="videoContainer">
+          <div id="player1Video"></div>
+          <div id="player2Video"></div>
+        </div>
 
         {/*Player scores*/}
         <div className="PlayerBounds ScoringShadow FadeIn" id="PlayerBounds">
