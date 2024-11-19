@@ -22,7 +22,7 @@ declare global {
   }
 }
 
-const taToken = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjRFOTc0RUE5RTk4RkI5MzJFRUNBOEEyODc0MjBBOThCMjg4M0JEREIiLCJ4NXQiOiJUcGRPcWVtUHVUTHV5b29vZENDcGl5aUR2ZHMiLCJ0eXAiOiJKV1QifQ.eyJpYXQiOiIxNzMxNTI2OTI5IiwiZXhwIjoiMjA0NzA1OTcyOSIsInRhOmRpc2NvcmRfaWQiOiJhNjhlYzYxOS1iMThhLTQ4NTUtYTI2My00MzUwOGM2YTY3YzAiLCJ0YTpkaXNjb3JkX25hbWUiOiJ0ZXN0Qm90RmxpdHMiLCJ0YTpkaXNjb3JkX2F2YXRhciI6IiIsImlzcyI6InRhX3NlcnZlciIsImF1ZCI6InRhX3VzZXJzIn0.JEnCRcSmiXRZ0OjEerCrtmvyq8JjVfiZH9mtkC7DKNf9G7Zu0J2k6jNiOWNGU9YEUmLtZwjEk77RNwrE4MSztWHOwcwDrIGk7ViYyinis10uKGpOpojP_teJC4G0t9WTvSzVQBzxSkh0m4pCcx3u7HDihszV0bRdtM1ww_yOTYwXFJJtym2CEK2G_iQvl47hpH5M8Q5cW12SFfvzVcQy308ZiWuwgItT7QDvWIv2MoH9tc6iQ20GJ3NpOnGtpQxC1GimYDJ2XXgNnvL3aC_VlVckBL-JsmS3TN69_KcgkErDRk1dSDChj8ZC8GInDTlKlrQG702oV1mZd2bA528fJQ";
+const taToken = "";
 
 let myTourney: Tournament;
 export let client: TAClient;
@@ -53,7 +53,6 @@ async function nextMatch()
   //   await client.removeUserFromMatch(myTourney.guid, match.guid, client.stateManager.getSelfGuid());
   // }
   console.log(currentMatch);
-  window.setPlayerChannels("hamiltun", "wdg_mid");
   if(currentMatch === undefined) return;
   let match = client.stateManager.getMatches(myTourney.guid)![(nextMatchNr > 1)? nextMatchNr - 1 : 0];
   await client.removeUserFromMatch(myTourney.guid, match!.guid!, client.stateManager.getSelfGuid());
@@ -209,7 +208,7 @@ function App() {
         await wait(1000); // Wait for the connection to be established
 
         // Create a tournament instance which we will then use
-        myTourney = client.stateManager.getTournaments().find(x => x.settings?.tournamentName === "Moon's Test Tourney")!;
+        myTourney = client.stateManager.getTournaments().find(x => x.settings?.tournamentName === "rst2024")!;
 
         // Join the tournament
         if (myTourney) {

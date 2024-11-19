@@ -75,7 +75,7 @@ async function setOverlay(playerIDs, playerNames, platformIDs) {
         player2NameElement.innerText = playerNames[1];
         player2NameElement.style.opacity = '1';
 
-        window.setPlayerChannels(getTwitchID(platformIDs[0]), getTwitchID(platformIDs[1]));
+        window.setPlayerChannels(await getTwitchID(platformIDs[0]), await getTwitchID(platformIDs[1]));
 
         // set player containers
         playerContainersElement.style.opacity = '1';
