@@ -37,6 +37,7 @@ async function getTwitchID(platformID)
 
 async function setOverlay(playerIDs, playerNames, platformIDs) {
     playerIDs = [playerIDs[0], playerIDs[1]];
+    console.log("Setting overlay for players:", playerIDs, playerNames, platformIDs)
 
     const player1ImageElement = document.getElementById("Player1Image");
     const player1NameElement = document.getElementById("Player1Name");

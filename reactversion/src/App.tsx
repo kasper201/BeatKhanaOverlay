@@ -22,7 +22,7 @@ declare global {
   }
 }
 
-const taToken = "";
+const taToken = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjRFOTc0RUE5RTk4RkI5MzJFRUNBOEEyODc0MjBBOThCMjg4M0JEREIiLCJ4NXQiOiJUcGRPcWVtUHVUTHV5b29vZENDcGl5aUR2ZHMiLCJ0eXAiOiJKV1QifQ.eyJpYXQiOiIxNzMyMDQ5ODMyIiwiZXhwIjoiMjA0NzU4MjYzMiIsInRhOmRpc2NvcmRfaWQiOiI5ZTQ3NWI2NS0wOWVhLTQxN2ItOTllNS0zZjhhMWE2ZWQ5NTkiLCJ0YTpkaXNjb3JkX25hbWUiOiJmbGl0c8K0cyB0ZXN0IGJvdCIsInRhOmRpc2NvcmRfYXZhdGFyIjoiIiwiaXNzIjoidGFfc2VydmVyIiwiYXVkIjoidGFfdXNlcnMifQ.m25DO2yaJViVrI91af0bJjilS5PnKFbPl1_h6KQcOAN9wFGb-pQJBIj2eqN6OHnI930CMgC4t9homl8abUQbHGxN87kIpW0030l4EORWtpPwQuZRl1kurx3-Cda2zuEwrs4EThWVGZyHZepV-243vDrZ5jorS4a_41WlOODY0Jbii2zK96wO-ztmIwvvsDNmQ-7LzUNgcktZdEFjXrqMuCL8NB8g6JFjuRkjpHD8u_Ja7hb6b4TDVR1m9jduakoCrsBMzSTdUEPhFPE7TPzhD-SFjE7IKCJGw1uJd7t8gxlgClS_ljdmY_OI5ckfuHyKCQy3eSBHmXNT6LyzbdK9nA";
 
 let myTourney: Tournament;
 export let client: TAClient;
@@ -39,11 +39,14 @@ async function addUsers(client: TAClient, myTourney: Tournament, matchNr: number
     await client.addUserToMatch(myTourney.guid, match.guid, client.stateManager.getSelfGuid());
     // maybe error check? NAHH
     let users = client.stateManager.getUsers(myTourney.guid)!.filter(x => match.associatedUsers.includes(x.guid) && x.clientType === User_ClientTypes.Player);
+    console.log("users");
     if (users.length === 0) return;
     console.log(users);
     setPlayerInfo(users.map(x => x.guid), users.map(x => x.name));
     await setOverlay(users.map(x => x.guid), users.map(x => x.name), users.map(x => x.platformId));
     currentMatch = match;
+  } else {
+    console.log("No matches found");
   }
 }
 
@@ -53,7 +56,7 @@ async function nextMatch()
   //   await client.removeUserFromMatch(myTourney.guid, match.guid, client.stateManager.getSelfGuid());
   // }
   console.log(currentMatch);
-  if(currentMatch === undefined) return;
+  if(currentMatch === undefined) await addUsers(client, myTourney, nextMatchNr);
   let match = client.stateManager.getMatches(myTourney.guid)![(nextMatchNr > 1)? nextMatchNr - 1 : 0];
   await client.removeUserFromMatch(myTourney.guid, match!.guid!, client.stateManager.getSelfGuid());
   console.log("Removed user from match");
@@ -133,6 +136,8 @@ function App() {
         console.error("Failed to load Twitch script:", error);
       });
 
+    // document.getElementById("Logo").src = 'url(${window.location.origin}/images/Logo.png)';
+
       let userScores: {userGuid: string | undefined, score: number} = {userGuid: "", score: 0};
       const createTaClient = async() => {
 
@@ -165,9 +170,13 @@ function App() {
 
         client.stateManager.on("matchUpdated",  async([match, tournament]: [Match, Tournament]) => {
           console.log("Updated match");
-          let levelID = match.selectedMap?.gameplayParameters?.beatmap?.levelId.toLowerCase().slice(13);
-          let levelDiff = match.selectedMap?.gameplayParameters?.beatmap?.difficulty;
-          getMap(levelID, levelDiff);
+          if(currentMatch?.guid === match?.guid) {
+            let levelID = match.selectedMap?.gameplayParameters?.beatmap?.levelId.toLowerCase().slice(13);
+            let levelDiff = match.selectedMap?.gameplayParameters?.beatmap?.difficulty;
+            getMap(levelID, levelDiff);
+          } else {
+            console.log("Not current match");
+          }
         });
 
         client.stateManager.on("matchCreated",  async([match, tournament]: [Match, Tournament]) => {
@@ -184,7 +193,7 @@ function App() {
           if(currentMatch?.guid === match?.guid)
           {
             // currentMatch = undefined;
-            resetAllPlayers();
+            // resetAllPlayers();
           }
         });
 
@@ -208,7 +217,7 @@ function App() {
         await wait(1000); // Wait for the connection to be established
 
         // Create a tournament instance which we will then use
-        myTourney = client.stateManager.getTournaments().find(x => x.settings?.tournamentName === "rst2024")!;
+        myTourney = client.stateManager.getTournaments().find(x => x.settings?.tournamentName === "Moon's Test Tourney")!;
 
         // Join the tournament
         if (myTourney) {
@@ -228,8 +237,8 @@ function App() {
         }
 
         // Add users to the match
-        addUsers(client, myTourney, nextMatchNr);
         setTaClient(client);
+        addUsers(client, myTourney, nextMatchNr);
       };
       console.log("Creating TA client");
       createTaClient();
@@ -255,6 +264,7 @@ function App() {
             </div>
           </div>
           <div className="LogoSpot" id="LogoContainer">
+            <img src="" className="Logo" id="Logo"/>
           </div>
           <div className="Player2Container" id="Player2Container">
             <div className="imageContainer2" id="imageContainer2">
@@ -320,8 +330,8 @@ function App() {
             <div className="SongBox">
               <p className="SongName" id="SongName">Really Long Song name that is...</p>
               <div className="SongInfoLeft">
-                <p className="SongMapper" id="SongMapper">Mapped by NightHawk</p>
-                <p className="UploadDate" id="UploadDate">Uploaded on 2021-09-01</p>
+                <p className="SongMapper" id="SongMapper">Mapped by BeatKhana</p>
+                <p className="UploadDate" id="UploadDate">Uploaded on 2000-11-23</p>
               </div>
               <div className="SongInfoRight">
                 <p className="SongArtist" id="SongArtist">Lauv</p>
