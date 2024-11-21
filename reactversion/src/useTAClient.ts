@@ -5,6 +5,7 @@ import { Match, Push_SongFinished, RealtimeScore, Response_ResponseType, TAClien
 type Listener<T> = (event: T) => void;
 
 export const useTAClient = () => {
+    const taConnectedListeners = useRef<Listener<{}>[]>([]);
     const realtimeScoreListeners = useRef<Listener<RealtimeScore>[]>([]);
     const songFinishedListeners = useRef<Listener<Push_SongFinished>[]>([]);
     const failedToCreateMatchListeners = useRef<Listener<{}>[]>([]);
@@ -14,51 +15,15 @@ export const useTAClient = () => {
     const taClient = useRef<TAClient>();
     const [taClientConnected, setTAClientConnected] = useState(false);
 
-    useEffect(() => {
-        const client = new TAClient();
-        client.setAuthToken('readonly');
-        let isMounted = true;
-
-        const setupTAClient = async () => {
-            try {
-                const connectResponse = await client.connect('server.tournamentassistant.net', '8676');
-                if (!isMounted) return;
-
-                if (connectResponse.type !== Response_ResponseType.Success && connectResponse.details.oneofKind === "connect") {
-                    console.error(connectResponse.details.connect.reason);
-                }
-
-                const tourneys = client.stateManager.getTournaments();
-                const targetTourney = tourneys.find(x => x.settings?.tournamentName === 'rst2024');
-
-                if (!targetTourney) {
-                    console.error(`Could not find tournament with name ${'rst2024'}`);
-                    return;
-                }
-
-                const joinResponse = await client.joinTournament(targetTourney.guid);
-                if (!isMounted) return; // If component unmounted, exit early
-
-                if (joinResponse.type !== Response_ResponseType.Success && joinResponse.details.oneofKind === "join") {
-                    console.error(joinResponse.details.join.reason);
-                }
-
-                taClient.current = client;
-
-                setTAClientConnected(true);
-            } catch (error) {
-                console.error("Error setting up TAClient:", error);
-            }
-        };
-
-        setupTAClient();
-
+    const subscribeToTAConnected = useCallback((listener: Listener<{}>) => {
+        taConnectedListeners.current.push(listener);
         return () => {
-            isMounted = false; // Set flag to false on cleanup
-            client.disconnect();
-
-            setTAClientConnected(false);
+            taConnectedListeners.current = taConnectedListeners.current.filter((l) => l !== listener);
         };
+    }, []);
+
+    const emitTAConnected = useCallback(() => {
+        taConnectedListeners.current.forEach((listener) => listener({}));
     }, []);
 
     const subscribeToRealtimeScores = useCallback((listener: Listener<RealtimeScore>) => {
@@ -128,6 +93,55 @@ export const useTAClient = () => {
     }, []);
 
     useEffect(() => {
+        const client = new TAClient();
+        client.setAuthToken('readonly');
+        let isMounted = true;
+
+        const setupTAClient = async () => {
+            try {
+                const connectResponse = await client.connect('server.tournamentassistant.net', '8676');
+                if (!isMounted) return;
+
+                if (connectResponse.type !== Response_ResponseType.Success && connectResponse.details.oneofKind === "connect") {
+                    console.error(connectResponse.details.connect.reason);
+                }
+
+                const tourneys = client.stateManager.getTournaments();
+                const targetTourney = tourneys.find(x => x.settings?.tournamentName === 'rst2024');
+
+                if (!targetTourney) {
+                    console.error(`Could not find tournament with name ${'rst2024'}`);
+                    return;
+                }
+
+                const joinResponse = await client.joinTournament(targetTourney.guid);
+                if (!isMounted) return; // If component unmounted, exit early
+
+                if (joinResponse.type !== Response_ResponseType.Success && joinResponse.details.oneofKind === "join") {
+                    console.error(joinResponse.details.join.reason);
+                }
+
+                taClient.current = client;
+
+                setTAClientConnected(true);
+
+                emitTAConnected();
+            } catch (error) {
+                console.error("Error setting up TAClient:", error);
+            }
+        };
+
+        setupTAClient();
+
+        return () => {
+            isMounted = false; // Set flag to false on cleanup
+            client.disconnect();
+
+            setTAClientConnected(false);
+        };
+    }, [emitTAConnected]);
+
+    useEffect(() => {
         if (taClientConnected && taClient.current) {
             const handleRealtimeScore = (score: RealtimeScore) => {
                 emitRealtimeScore(score);
@@ -170,5 +184,5 @@ export const useTAClient = () => {
         }
     }, [taClientConnected, emitRealtimeScore, emitSongFinished, emitFailedToCreateMatch, emitMatchCreated, emitMatchUpdated, emitMatchUpdated]);
 
-    return { taClient, subscribeToRealtimeScores, subscribeToSongFinished, subscribeToFailedToCreateMatch, subscribeToMatchCreated, subscribeToMatchUpdated, subscribeToMatchDeleted };
+    return { taClient, subscribeToTAConnected, subscribeToRealtimeScores, subscribeToSongFinished, subscribeToFailedToCreateMatch, subscribeToMatchCreated, subscribeToMatchUpdated, subscribeToMatchDeleted };
 };

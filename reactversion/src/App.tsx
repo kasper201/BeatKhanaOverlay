@@ -145,6 +145,10 @@ function App() {
 
     console.log("Subscribing to TA client events");
 
+    const unsubscribeFromTAConnected = taHook.subscribeToTAConnected(() => {
+      addSelfToMatch(nextMatchNr);
+    });
+
     const unsubscribeFromRealtimeScores = taHook.subscribeToRealtimeScores((score) => {
       console.log(score);
       scoreUpdate(score.userGuid, score.score, score.combo, score.accuracy, score.notesMissed, 0, score.songPosition);
@@ -195,9 +199,10 @@ function App() {
       }
     });
 
-    addSelfToMatch(nextMatchNr);
-
     return () => {
+      console.log("Unsubscribing from TA client events");
+
+      unsubscribeFromTAConnected();
       unsubscribeFromRealtimeScores();
       unsubscribeFromSongFinished();
       unsubscribeFromFailedToCreateMatch();
