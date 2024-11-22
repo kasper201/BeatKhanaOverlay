@@ -2,18 +2,19 @@ async function getImage(platformID) {
     try {
         const response = await fetch(`http://api.beatkhana.com/api/getUserByBeatleader/${platformID}`);
         if (!response.ok) {
-            new Error(`HTTP error! status: ${response.status}`);
+            // new Error(`HTTP error! status: ${response.status}`);
         }
         const text = await response.text();
         if (!text) {
-            new Error("Empty response body");
+            // new Error("Empty response body");
+            return "./images/Placeholder.png"; // Fallback image
         }
         const data = JSON.parse(text);
         if (Array.isArray(data) && data.length > 0) {
             console.log(data[0]);
             return data[0].avatarurl;
         } else {
-            new Error("Invalid response structure");
+            // new Error("Invalid response structure");
         }
     } catch (error) {
         console.error("Failed to fetch image:", error);
@@ -30,6 +31,7 @@ async function getTwitchID(platformID)
     const text = await response.text();
     if (!text) {
         new Error("Empty response body");
+        return "yetanotherbt"; // Fallback twitch name
     }
     const data = JSON.parse(text);
     return data[0].twitchname;

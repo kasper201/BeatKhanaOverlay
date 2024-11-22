@@ -55,7 +55,7 @@ function App() {
   }
   async function addSelfToMatch(playerName: string | undefined) {
     console.log("Add self to match");
-    const myTourney = taHook.taClient.current!.stateManager.getTournaments().find(x => x.settings?.tournamentName === "Moon's Test Tourney");
+    const myTourney = taHook.taClient.current!.stateManager.getTournaments().find(x => x.settings?.tournamentName === "rst2024");
     
     if (!myTourney) {
       console.error(`Could not find tournament with name ${'Moon\'s Test Tourney'}`);
@@ -91,14 +91,19 @@ function App() {
   {
     let matches: HTMLButtonElement | undefined = undefined
     console.log("Choose match");
-    const myTourney = taHook.taClient.current!.stateManager.getTournaments().find(x => x.settings?.tournamentName === "Moon's Test Tourney")!;
+    const myTourney = taHook.taClient.current!.stateManager.getTournaments().find(x => x.settings?.tournamentName === "rst2024")!;
 	
     if (!myTourney) {
-      console.error(`Could not find tournament with name ${'Moon\'s Test Tourney'}`);
+      console.error(`Could not find tournament with name ${'rst2024'}`);
       return;
     }
+    const chooseMatchElement = document.getElementsByClassName("matchButton");
+    if (chooseMatchElement) {
+      for (let i = 0; i < chooseMatchElement.length; i++)
+        chooseMatchElement[i].remove();
+    }
+    const tourneyPlayers = taHook.taClient.current!.stateManager.getUsers(myTourney.guid)!;
     myTourney.matches?.forEach(match => {
-        const tourneyPlayers = taHook.taClient.current!.stateManager.getUsers(myTourney.guid)!;
         const matchPlayers = tourneyPlayers.filter(x => x.clientType === User_ClientTypes.Player && match.associatedUsers.includes(x.guid));
         console.log(match.associatedUsers[0] + " vs " + match.associatedUsers[1]);
 		matches = document.createElement('button');
@@ -111,9 +116,8 @@ function App() {
             chooseMatchbtn[i].remove();
           }
         }
+        document.getElementById("chooseMatch")?.appendChild(matches);
     })
-    if(matches === undefined) return;
-    document.getElementById("chooseMatch")?.appendChild(matches);
   }
   
   React.useEffect(() => {

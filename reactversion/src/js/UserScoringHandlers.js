@@ -142,11 +142,11 @@ function updateScores(user, score)
 function userWinScore(player)
 {
 	if(playerIDs[0] === player) {
-		playerWinScore[player] += 1;
-		updateScores(0, playerWinScore[player]);
+		playerWinScore[0] += 1;
+		updateScores(0, playerWinScore[0]);
 	} else if(playerIDs[1] === player) {
-		playerWinScore[player] += 1;
-		updateScores(1, playerWinScore[player]);
+		playerWinScore[1] += 1;
+		updateScores(1, playerWinScore[1]);
 	} else {
 		console.error("Invalid player ID");
 	}

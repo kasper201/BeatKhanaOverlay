@@ -93,7 +93,7 @@ export const useTAClient = () => {
 
     useEffect(() => {
         const client = new TAClient();
-        client.setAuthToken('eyJhbGciOiJSUzI1NiIsImtpZCI6IjRFOTc0RUE5RTk4RkI5MzJFRUNBOEEyODc0MjBBOThCMjg4M0JEREIiLCJ4NXQiOiJUcGRPcWVtUHVUTHV5b29vZENDcGl5aUR2ZHMiLCJ0eXAiOiJKV1QifQ.eyJpYXQiOiIxNzMyMjE0ODQ3IiwiZXhwIjoiMjA0Nzc0NzY0NyIsInRhOmRpc2NvcmRfaWQiOiJhYWIxY2M1MS02OGE0LTQ0N2EtYmFkYi1mOTg0NDY3NTgyZjEiLCJ0YTpkaXNjb3JkX25hbWUiOiJuZXdmbGl0c3Rlc3Rib3QiLCJ0YTpkaXNjb3JkX2F2YXRhciI6IiIsImlzcyI6InRhX3NlcnZlciIsImF1ZCI6InRhX3VzZXJzIn0.c9VY5lzDpsL--KL4PXCx5BYbxaK-N2zuRj-jzYpisip0tpNafHEVNi5khrhCWoTcVmNq2mHFguBrvXPzC2SKxQaHwNOyKzzyp0iVyzx2AooPZouO3d0uNy7UwKIVBE3kdJZk5koAbdDo_9KChHSsqMMON7jx-EGJPtWTQenRF-4WGkOc2jP280eBxONy5xvmvf1uOTTfL3STTnnQEART2xuMK6SGbutrVMGAsDu86xytn-4-2SSaes_JzcU9VF41m_NDWOotw4sqdr-KOC8Kj0BImI5DfY-wdEtIaUayH3PGnvpev6syaGtVjP4MC91IE_-TVEJCG6OAZr0PXwOxCA');
+        client.setAuthToken('eyJhbGciOiJSUzI1NiIsImtpZCI6IjRFOTc0RUE5RTk4RkI5MzJFRUNBOEEyODc0MjBBOThCMjg4M0JEREIiLCJ4NXQiOiJUcGRPcWVtUHVUTHV5b29vZENDcGl5aUR2ZHMiLCJ0eXAiOiJKV1QifQ.eyJpYXQiOiIxNzMyMDMxMDU5IiwiZXhwIjoiMjA0NzU2Mzg1OSIsInRhOmRpc2NvcmRfaWQiOiIxMmE5YzZlOS03OTBjLTQyZjMtYTQxMy1jMGRmZGQ5MWNmNDMiLCJ0YTpkaXNjb3JkX25hbWUiOiJSU1QiLCJ0YTpkaXNjb3JkX2F2YXRhciI6IiIsImlzcyI6InRhX3NlcnZlciIsImF1ZCI6InRhX3VzZXJzIn0.E2Vv1F1JM7-eMazrsEV-k27c3rcdbqzs3TAMmcz5ddGW10eqQUEMngvjVQComYhMMW5UR_dBZZPfpdcQINLkXzm4FhZ9CHx4k-LvXe3ufTwE1yKY7cAnSwwqa5e3S9WBl4CMowJujDIP1ZP7YXLaWCLuw43YRpe-U7ZdUGWIESi1P5m8WrzA2eS3ehLleHPApRyRLpojDqwFZUbKLVNlDQipvKqwR-FUTueNXkgJK8JaVgIDv6B022-4R1GfzIUbIMdYXeYbMRCfYvU_OJK2BR6Hu9oHQVST_DKKXK50X3XsloR45cCkxHI-3gL0b3wORqv_Rlih6NBveEZLu6xf6Q');
         let isMounted = true;
 
         const setupTAClient = async () => {
@@ -106,10 +106,10 @@ export const useTAClient = () => {
                 }
 
                 const tourneys = client.stateManager.getTournaments();
-                const targetTourney = tourneys.find(x => x.settings?.tournamentName == "Moon's Test Tourney");
+                const targetTourney = tourneys.find(x => x.settings?.tournamentName == "rst2024");
 
                 if (!targetTourney) {
-                    console.error(`Could not find tournament with name ${"Moon's Test Tourney"}`);
+                    console.error(`Could not find tournament with name ${"rst2024"}`);
                     return;
                 }
 
