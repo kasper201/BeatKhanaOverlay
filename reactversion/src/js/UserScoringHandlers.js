@@ -48,7 +48,6 @@ function resetAllPlayers() {
 	playerAcc = [0, 0];
 	playerCombo = [0, 0];
 	playerWinScore = [0, 0];
-	playerIDs = [0, 0];
 	// playerMisses = [0, 0];
 
 	updateTug();

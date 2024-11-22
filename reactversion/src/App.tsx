@@ -13,6 +13,7 @@ import { getTwitchID, setOverlay } from './js/OverlayHandlers.js';
 import { Tournament, Match, Response_ResponseType, TAClient, User_ClientTypes } from 'moons-ta-client';
 import { wait } from "@testing-library/user-event/dist/utils";
 import { useTAClient } from './useTAClient';
+import {unsubscribe} from "node:diagnostics_channel";
 
 // Ensure Twitch is available globally
 declare global {
@@ -38,54 +39,83 @@ function App() {
     }
   };
   let taHook = useTAClient();
-
-  async function addSelfToMatch(matchNr: number) {
-    console.log("Add user to match");
-    const myTourney = taHook.taClient.current!.stateManager.getTournaments().find(x => x.settings?.tournamentName === 'rst2024');
-
+  
+  // garbage name but I needed smt
+  async function connectToMatch(myTourney: Tournament, matchID?: string)
+  {
+    let match = taHook.taClient.current!.stateManager.getMatch(myTourney.guid, matchID!)!;
+    await taHook.taClient.current!.addUserToMatch(myTourney.guid, match.guid, taHook.taClient.current!.stateManager.getSelfGuid());
+    // maybe error check? NAHH
+    let users = taHook.taClient.current!.stateManager.getUsers(myTourney.guid)!.filter(x => match.associatedUsers.includes(x.guid) && x.clientType === User_ClientTypes.Player);
+    if (users.length === 0) return;
+    console.log(users);
+    setPlayerInfo(users.map(x => x.guid), users.map(x => x.name));
+    await setOverlay(users.map(x => x.guid), users.map(x => x.name), users.map(x => x.platformId));
+    currentMatch = match;
+  }
+  async function addSelfToMatch(playerName: string | undefined) {
+    console.log("Add self to match");
+    const myTourney = taHook.taClient.current!.stateManager.getTournaments().find(x => x.settings?.tournamentName === "Moon's Test Tourney");
+    
     if (!myTourney) {
-      console.error(`Could not find tournament with name ${'rst2024'}`);
+      console.error(`Could not find tournament with name ${'Moon\'s Test Tourney'}`);
       return;
     }
-
-    if (taHook.taClient.current!.stateManager.getMatches(myTourney.guid)!.length <= matchNr) matchNr = 0;
-    if (taHook.taClient.current!.stateManager.getMatches(myTourney.guid) !== undefined && taHook.taClient.current!.stateManager.getMatches(myTourney.guid)!.length > 0) {
-      let match = taHook.taClient.current!.stateManager.getMatches(myTourney.guid)![matchNr];
-      matchNr++;
-      await taHook.taClient.current!.addUserToMatch(myTourney.guid, match.guid, taHook.taClient.current!.stateManager.getSelfGuid());
-      // maybe error check? NAHH
-      let users = taHook.taClient.current!.stateManager.getUsers(myTourney.guid)!.filter(x => match.associatedUsers.includes(x.guid) && x.clientType === User_ClientTypes.Player);
-      if (users.length === 0) return;
-      console.log(users);
-      setPlayerInfo(users.map(x => x.guid), users.map(x => x.name));
-      await setOverlay(users.map(x => x.guid), users.map(x => x.name), users.map(x => x.platformId));
-      currentMatch = match;
-    }
-  }
-
-  async function nextMatch() {
-    // for (const match of client.stateManager.getMatches(myTourney.guid)!){
-    //   await client.removeUserFromMatch(myTourney.guid, match.guid, client.stateManager.getSelfGuid());
-    // }
-    console.log(currentMatch);
-
-    const myTourney = taHook.taClient.current!.stateManager.getTournaments().find(x => x.settings?.tournamentName === 'rst2024');
-
-    if (!myTourney) {
-      console.error(`Could not find tournament with name ${'rst2024'}`);
+    
+    // TODO: Remove self from match if already in one!!!
+    myTourney.matches?.forEach(match => {
+        if (match.associatedUsers.includes(taHook.taClient.current!.stateManager.getSelfGuid())) {
+          // remove self from match
+          console.log("Removing self from match")
+          taHook.taClient.current!.removeUserFromMatch(myTourney.guid, match.guid, taHook.taClient.current!.stateManager.getSelfGuid());
+        }
+    });
+    
+    if (!(taHook.taClient.current!.stateManager.getMatches(myTourney.guid) !== undefined && taHook.taClient.current!.stateManager.getMatches(myTourney.guid)!.length > 0)) {
       return;
     }
-
-    if (currentMatch === undefined) return;
-    let match = taHook.taClient.current!.stateManager.getMatches(myTourney.guid)![(nextMatchNr > 1) ? nextMatchNr - 1 : 0];
-    await taHook.taClient.current!.removeUserFromMatch(myTourney.guid, match!.guid!, taHook.taClient.current!.stateManager.getSelfGuid());
-    console.log("Removed self from match");
-
-    await addSelfToMatch(nextMatchNr);
-    console.log("Next match");
-    console.log(nextMatchNr);
+    if(playerName === undefined) {
+      let matchID = taHook.taClient.current!.stateManager.getMatches(myTourney.guid)![0].guid;
+      await connectToMatch(myTourney, matchID);
+      return;
+    }
+    for (let i = 0; i < taHook.taClient.current!.stateManager.getMatches(myTourney.guid)!.length; i++) {
+      if (taHook.taClient.current!.stateManager.getMatches(myTourney.guid)![i].associatedUsers[0].toLowerCase() === playerName || taHook.taClient.current!.stateManager.getMatches(myTourney.guid)![i].associatedUsers[1].toLowerCase() === playerName) {
+        await connectToMatch(myTourney, taHook.taClient.current!.stateManager.getMatches(myTourney.guid)![i].guid);
+        break;
+      }
+    }
   }
-
+  
+  async function chooseMatch()
+  {
+    let matches: HTMLButtonElement | undefined = undefined
+    console.log("Choose match");
+    const myTourney = taHook.taClient.current!.stateManager.getTournaments().find(x => x.settings?.tournamentName === "Moon's Test Tourney")!;
+	
+    if (!myTourney) {
+      console.error(`Could not find tournament with name ${'Moon\'s Test Tourney'}`);
+      return;
+    }
+    myTourney.matches?.forEach(match => {
+        const tourneyPlayers = taHook.taClient.current!.stateManager.getUsers(myTourney.guid)!;
+        const matchPlayers = tourneyPlayers.filter(x => x.clientType === User_ClientTypes.Player && match.associatedUsers.includes(x.guid));
+        console.log(match.associatedUsers[0] + " vs " + match.associatedUsers[1]);
+		matches = document.createElement('button');
+        matches.className = "matchButton";
+        matches.innerHTML = matchPlayers[0]?.name + " vs " + matchPlayers[1]?.name;
+        matches.onclick = () => {
+          connectToMatch(myTourney, match.guid);
+          let chooseMatchbtn = document.getElementsByClassName("matchButton");
+          for(let i = 0; i < chooseMatchbtn.length; i++) {
+            chooseMatchbtn[i].remove();
+          }
+        }
+    })
+    if(matches === undefined) return;
+    document.getElementById("chooseMatch")?.appendChild(matches);
+  }
+  
   React.useEffect(() => {
     const loadTwitchScript = () => {
       return new Promise((resolve, reject) => {
@@ -101,7 +131,7 @@ function App() {
         document.body.appendChild(script);
       });
     };
-
+    
     const initializeTwitchPlayers = () => {
       const player1 = new window.Twitch.Embed("player1Video", {
         width: "120%",
@@ -112,7 +142,7 @@ function App() {
         muted: false,
         parent: [window.location.hostname]
       });
-
+      
       const player2 = new window.Twitch.Embed("player2Video", {
         width: "120%",
         height: "120%",
@@ -122,42 +152,42 @@ function App() {
         muted: true,
         parent: [window.location.hostname]
       });
-
+      
       // Function to switch audio between players
       function switchAudio() {
         const isPlayer1Muted = player1.getMuted();
         player1.setMuted(!isPlayer1Muted);
         player2.setMuted(isPlayer1Muted);
       }
-
+      
       function setPlayerChannels(player1Channel: string, player2Channel: string) {
         player1.setChannel(player1Channel);
         player2.setChannel(player2Channel);
       }
-
+      
       window.setPlayerChannels = setPlayerChannels;
       window.switchAudio = switchAudio;
     };
-
+    
     loadTwitchScript().then(initializeTwitchPlayers).catch((error) => {
       console.error("Failed to load Twitch script:", error);
     });
-
+    
     console.log("Subscribing to TA client events");
-
+    
     const unsubscribeFromTAConnected = taHook.subscribeToTAConnected(() => {
-      addSelfToMatch(nextMatchNr);
+      addSelfToMatch(undefined);
     });
-
+    
     const unsubscribeFromRealtimeScores = taHook.subscribeToRealtimeScores((score) => {
       console.log(score);
       scoreUpdate(score.userGuid, score.score, score.combo, score.accuracy, score.notesMissed, 0, score.songPosition);
     });
-
+    
     const unsubscribeFromSongFinished = taHook.subscribeToSongFinished((songFinished) => {
       console.log("Song finished");
       let userScores: { userGuid: string | undefined, score: number } = { userGuid: "", score: 0 };
-
+      
       if (songFinished.matchId !== currentMatch?.guid) return;
       if (userScores.userGuid === "") {
         userScores = { userGuid: songFinished.player!.guid, score: songFinished.score };
@@ -171,26 +201,27 @@ function App() {
         userScores = { userGuid: "", score: 0 };
       }
     });
-
+    
     const unsubscribeFromFailedToCreateMatch = taHook.subscribeToFailedToCreateMatch(() => {
       console.log("failed to create Match");
     });
-
+    
     const unsubscribeFromMatchCreated = taHook.subscribeToMatchCreated(([match, tournament]) => {
       console.log("Created match");
       if (currentMatch === undefined) {
         console.log("Match created");
-        addSelfToMatch(nextMatchNr);
+        addSelfToMatch(undefined);
       }
     });
-
+    
     const unsubscribeFromMatchUpdated = taHook.subscribeToMatchUpdated(([match, tournament]) => {
       console.log("Updated match");
+      if(currentMatch?.guid !== match.guid) return;
       let levelID = match.selectedMap?.gameplayParameters?.beatmap?.levelId.toLowerCase().slice(13);
       let levelDiff = match.selectedMap?.gameplayParameters?.beatmap?.difficulty;
       getMap(levelID, levelDiff);
     });
-
+    
     const unsubscribeFromMatchDeleted = taHook.subscribeToMatchDeleted(([match, tournament]) => {
       console.log("Deleted match");
       if (currentMatch?.guid === match?.guid) {
@@ -198,10 +229,10 @@ function App() {
         resetAllPlayers();
       }
     });
-
+    
     return () => {
       console.log("Unsubscribing from TA client events");
-
+      
       unsubscribeFromTAConnected();
       unsubscribeFromRealtimeScores();
       unsubscribeFromSongFinished();
@@ -211,17 +242,17 @@ function App() {
       unsubscribeFromMatchDeleted();
     };
   }, []);
-
+  
   return (
-    <body className="BGImage">
+      <body className="BGImage">
       <div className="MainClass">
         <div className="PlayerContainers" id="PlayerContainers">
           <div className="Player1Container" id="Player1Container">
             <p className="Player1Name" id="Player1Name">OK</p>
             <button className="Player1SkipBase" id="Player1SkipBase"
-              onClick={(e) => handleButton(0, "skip")}></button>
+                    onClick={(e) => handleButton(0, "skip")}></button>
             <button className="Player1ReplayBase" id="Player1ReplayBase"
-              onClick={(e) => handleButton(0, "replay")}></button>
+                    onClick={(e) => handleButton(0, "replay")}></button>
             <div className="Scores" id="ScoresLeft">
               <div className="Player1Score" id="Player1Score2"></div>
               <div className="Player1Score" id="Player1Score1"></div>
@@ -243,31 +274,36 @@ function App() {
               <div className="Player2Score" id="Player2Score2"></div>
             </div>
             <button className="Player2SkipBase" id="Player2SkipBase"
-              onClick={(e) => handleButton(1, "skip")}></button>
+                    onClick={(e) => handleButton(1, "skip")}></button>
             <button className="Player2ReplayBase" id="Player2ReplayBase"
-              onClick={(e) => handleButton(1, "replay")}></button>
+                    onClick={(e) => handleButton(1, "replay")}></button>
             <p className="Player2Name" id="Player2Name">BOOMER</p>
           </div>
           <div className="divLine" id="divLine"></div>
-
+          
           {/* control button(s) */}
-          <button className={"NextButton"} id={"NextButton"} onClick={async (e) => {
-            await nextMatch();
-          }}>
+          <button
+              className={"chooseMatch"}
+              id={"chooseMatch"}
+              onClick={() => {
+                console.log("Choose match button pressed");
+                chooseMatch();
+              }}>
           </button>
+          
           <button className={"MuteButton"} id={"MuteButton"} onClick={() => {
             console.log("Mute button pressed");
             window.switchAudio();
           }}></button>
-
+        
         </div>
-
+        
         {/* Streams */}
         <div className="videoContainer">
           <div id="player1Video"></div>
           <div id="player2Video"></div>
         </div>
-
+        
         {/*Player scores*/}
         <div className="PlayerBounds ScoringShadow FadeIn" id="PlayerBounds">
           <div className="Player1Class" id="Player1Class">
@@ -281,7 +317,7 @@ function App() {
             <p className="Player2Combo" id="Player2Combo">0x</p>
           </div>
         </div>
-
+        
         {/*Tug of War*/}
         <div className="TugOfWar FadeIn" id="TugOfWar">
           <div className="LeftTugOuter">
@@ -291,7 +327,7 @@ function App() {
             <div className="RightTugInner SmoothWidth" id="RightTug"></div>
           </div>
         </div>
-
+        
         <div id="Song">
           <div className="SongCard FadeIn" id="SongCard">
             <div className="SongBox">
@@ -311,7 +347,7 @@ function App() {
           </div>
         </div>
       </div>
-    </body>
+      </body>
   );
 }
 

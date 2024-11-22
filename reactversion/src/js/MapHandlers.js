@@ -50,7 +50,7 @@ async function getMap(LevelId, LevelDiff) {
 				document.getElementById("SongMapper").innerText = data.metadata.songAuthorName.replaceAll('\n', '').replaceAll('\r', '');
 				document.getElementById("DiffName").innerHTML = diffText.replaceAll('\n', '').replaceAll('\r', '');
 				document.getElementById("SongLength").innerText = fancyTimeFormat(data.metadata.duration).replaceAll('\n', '').replaceAll('\r', '');
-
+				document.getElementById("UploadDate").innerText = "Uploaded at " + data.uploaded.replaceAll('\n', '').replaceAll('\r', '');
 				setTimeout(function () {
 					document.getElementById("SongCard").style.opacity = "1";
 				}, 500);

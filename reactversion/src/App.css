@@ -421,8 +421,8 @@ body {
   background: linear-gradient(90deg, #f6d16a 50%, #d91e36 50%);
 }
 
-/* Next button */
-.NextButton {
+/* control buttons */
+.chooseMatch {
   padding: 0;
   position: absolute;
   right: 0;
@@ -646,7 +646,7 @@ body {
   position: relative;
   top: -12px;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: " ";
   max-width: 19ch;
   white-space: nowrap;
 }
