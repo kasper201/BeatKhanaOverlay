@@ -107,7 +107,7 @@ function updateScores(user, score)
 	for(let i = 0; i < 3; i++)
 	{
 		scoreCountElement[0][i] = document.getElementById(`Player1Score${i}`);
-		scoreCountElement[1][i] = document.getElementById(`Player1Score${i}`);
+		scoreCountElement[1][i] = document.getElementById(`Player2Score${i}`);
 	}
 	if(score === 0)
 	{
@@ -141,15 +141,17 @@ function updateScores(user, score)
 
 function userWinScore(player)
 {
-	if(playerIDs[0] === player) {
-		playerWinScore[0] += 1;
-		updateScores(0, playerWinScore[0]);
-	} else if(playerIDs[1] === player) {
-		playerWinScore[1] += 1;
-		updateScores(1, playerWinScore[1]);
-	} else {
-		console.error("Invalid player ID");
-	}
+	playerWinScore[player] += 1;
+	updateScores(player, playerWinScore[player]);
+	// if(playerIDs[0] === player) {
+	// 	playerWinScore[0] += 1;
+	// 	updateScores(0, playerWinScore[0]);
+	// } else if(playerIDs[1] === player) {
+	// 	playerWinScore[1] += 1;
+	// 	updateScores(1, playerWinScore[1]);
+	// } else {
+	// 	console.error("Invalid player ID");
+	// }
 }
 
 function handleSkip(player)
@@ -199,6 +201,7 @@ function handleReplay(player)
 			playerReplay[0].style.background = `url(${window.location.origin}/images/skillreplay/L_YesReplay.svg)`;
 			if (playerWinScore !== null) {
 				playerWinScore[1] -= 1;
+				if(playerWinScore[1] < 0) playerWinScore[1] = 0;
 				updateScores(1, playerWinScore[1]);
 				playerHadReplay[0] = true;
 			}
@@ -206,15 +209,16 @@ function handleReplay(player)
 	}
 	else if(player === 1)
 	{
-		if(playerHadReplay[0] === true)
+		if(playerHadReplay[1] === true)
 		{
 			playerReplay[1].style.background = `url(${window.location.origin}/images/skillreplay/R_NoReplay.svg)`;
-			userWinScore(0);
+			// userWinScore(0);
 			playerHadReplay[1] = false;
 		} else {
 			playerReplay[1].style.background = `url(${window.location.origin}/images/skillreplay/R_YesReplay.svg)`;
 			if (playerWinScore !== null) {
 				playerWinScore[0] -= 1;
+				if(playerWinScore[0] < 0) playerWinScore[0] = 0;
 				updateScores(0, playerWinScore[0]);
 				playerHadReplay[1] = true;
 			}

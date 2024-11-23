@@ -51,7 +51,7 @@ function App() {
     await setOverlay(users.map(x => x.guid), users.map(x => x.name), users.map(x => x.platformId));
     currentMatch = match;
   }
-  async function addSelfToMatch(playerName: string | undefined) {
+  async function addSelfToMatch(playerName: string | undefined, matchID: string | undefined) {
     console.log("Add self to match");
     const myTourney = taHook.taClient.current!.stateManager.getTournaments().find(x => x.settings?.tournamentName === "rst2024");
 
@@ -60,7 +60,6 @@ function App() {
       return;
     }
 
-    // TODO: Remove self from match if already in one!!!
     myTourney.matches?.forEach(match => {
       if (match.associatedUsers.includes(taHook.taClient.current!.stateManager.getSelfGuid())) {
         // remove self from match
@@ -76,6 +75,10 @@ function App() {
       let matchID = taHook.taClient.current!.stateManager.getMatches(myTourney.guid)![0].guid;
       await connectToMatch(myTourney, matchID);
       return;
+    }
+    if(matchID !== undefined) {
+        await connectToMatch(myTourney, matchID);
+        return;
     }
     for (let i = 0; i < taHook.taClient.current!.stateManager.getMatches(myTourney.guid)!.length; i++) {
       if (taHook.taClient.current!.stateManager.getMatches(myTourney.guid)![i].associatedUsers[0].toLowerCase() === playerName || taHook.taClient.current!.stateManager.getMatches(myTourney.guid)![i].associatedUsers[1].toLowerCase() === playerName) {
@@ -166,7 +169,7 @@ function App() {
     console.log("Subscribing to TA client events");
 
     const unsubscribeFromTAConnected = taHook.subscribeToTAConnected(() => {
-      addSelfToMatch(undefined);
+      addSelfToMatch(undefined, undefined);
     });
 
     const unsubscribeFromRealtimeScores = taHook.subscribeToRealtimeScores((score) => {
@@ -182,14 +185,15 @@ function App() {
       if (userScores.userGuid === "") {
         userScores = { userGuid: songFinished.player!.guid, score: songFinished.score };
       }
-      if (userScores.score < songFinished.score) {
-        userWinScore(songFinished.player!.guid);
-        userScores = { userGuid: "", score: 0 };
-      }
-      else {
-        userWinScore(userScores.userGuid);
-        userScores = { userGuid: "", score: 0 };
-      }
+      // TODO: Fix user win scores
+      // if (userScores.score < songFinished.score) {
+      //   userWinScore(songFinished.player!.guid);
+      //   userScores = { userGuid: "", score: 0 };
+      // }
+      // else {
+      //   userWinScore(userScores.userGuid);
+      //   userScores = { userGuid: "", score: 0 };
+      // }
     });
 
     const unsubscribeFromFailedToCreateMatch = taHook.subscribeToFailedToCreateMatch(() => {
@@ -200,7 +204,7 @@ function App() {
       console.log("Created match");
       if (currentMatch === undefined) {
         console.log("Match created");
-        addSelfToMatch(undefined);
+        addSelfToMatch(undefined, undefined);
       }
     });
 
@@ -243,11 +247,12 @@ function App() {
               onClick={(e) => handleButton(0, "skip")}></button>
             <button className="Player1ReplayBase" id="Player1ReplayBase"
               onClick={(e) => handleButton(0, "replay")}></button>
-            <div className="Scores" id="ScoresLeft">
-              <div className="Player1Score" id="Player1Score2"></div>
+            <button className="Scores" id="ScoresLeft"
+                    onClick={() => userWinScore(0)}>
+            <div className="Player1Score" id="Player1Score2"></div>
               <div className="Player1Score" id="Player1Score1"></div>
               <div className="Player1Score" id="Player1Score0"></div>
-            </div>
+            </button>
             <div className="imageContainer1" id="imageContainer1">
               <img src="../public/images/Placeholder.png" className="Player1Image" id="Player1Image" />
             </div>
@@ -258,11 +263,12 @@ function App() {
             <div className="imageContainer2" id="imageContainer2">
               <img src="../public/images/Placeholder.png" className="Player2Image" id="Player2Image" />
             </div>
-            <div className="Scores" id="ScoresRight">
+            <button className="Scores" id="ScoresRight"
+                    onClick={() => userWinScore(1)}>
               <div className="Player2Score" id="Player2Score0"></div>
               <div className="Player2Score" id="Player2Score1"></div>
               <div className="Player2Score" id="Player2Score2"></div>
-            </div>
+            </button>
             <button className="Player2SkipBase" id="Player2SkipBase"
               onClick={(e) => handleButton(1, "skip")}></button>
             <button className="Player2ReplayBase" id="Player2ReplayBase"
@@ -281,23 +287,26 @@ function App() {
             }}>
           </button>
 
-          {selectableMatches && selectableMatches.map(([matchString, match], index) => (
-            <button
-              key={index}
-              onClick={() => {
-                const myTourney = taHook.taClient.current!.stateManager.getTournaments().find(x => x.settings?.tournamentName === "rst2024");
-
-                if (!myTourney) {
-                  console.error(`Could not find tournament with name ${'Moon\'s Test Tourney'}`);
-                  return;
-                }
-                addSelfToMatch(match.guid);
-                setSelectableMatches([]);
-              }}
-            >
-              {matchString}
-            </button>
-          ))}
+          <span className={"buttonsChooseMatch"}>
+            {selectableMatches && selectableMatches.map(([matchString, match], index) => (
+              <button
+                key={index}
+                id={"MatchSelection"}
+                onClick={() => {
+                  const myTourney = taHook.taClient.current!.stateManager.getTournaments().find(x => x.settings?.tournamentName === "rst2024");
+  
+                  if (!myTourney) {
+                    console.error(`Could not find tournament with name ${'rst2024'}`);
+                    return;
+                  }
+                  addSelfToMatch(undefined, match.guid);
+                  setSelectableMatches([]);
+                }}
+              >
+                {matchString}
+              </button>
+            ))}
+          </span>
 
           <button className={"MuteButton"} id={"MuteButton"} onClick={() => {
             console.log("Mute button pressed");

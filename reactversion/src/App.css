@@ -227,6 +227,8 @@ body {
   justify-content: center;
   align-items: center;
   right: 119px;
+  background: transparent;
+  border: transparent;
 }
 
 .Player1Score {
@@ -341,6 +343,8 @@ body {
   justify-content: center;
   align-items: center;
   left: 105px;
+  background: transparent;
+  border: transparent;
 }
 
 .Player2Score {
@@ -419,6 +423,25 @@ body {
   width: 100%;
   height: 8px;
   background: linear-gradient(90deg, #f6d16a 50%, #d91e36 50%);
+}
+
+.buttonsChooseMatch {
+  position: absolute;
+  top: 166px;
+  right: 0;
+  height: inherit;
+  width: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* Ensure content does not overflow */
+  z-index: 100001;
+}
+
+.MatchSelection {
+  max-height: 100%; /* Limit height to the parent element */
+  max-width: 100%;  /* Limit width to the parent element */
+  overflow: auto;   /* Add scrollbars if content exceeds the bounds */
 }
 
 /* control buttons */
