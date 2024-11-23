@@ -62,17 +62,15 @@ async function setOverlay(playerIDs, playerNames, platformIDs) {
         playerImage[1] = await getImage(platformIDs[1]);
 
         // set player images
-        if(!platformIDs[0] || !playerImage[0]){
+        if(!platformIDs[0]){
             console.error("Invalid platform ID:", platformIDs[0]);
-            player1ImageElement.src = "./images/Placeholder.png"; // Fallback image
         } else {
-            player1ImageElement.src = playerImage[0];
+            player1ImageElement.src = playerImage[0] || "./images/Placeholder.png";
         }
         if(!platformIDs[1] || !playerImage[1]){
             console.error("Invalid platform ID:", platformIDs[1]);
-            player2ImageElement.src = "./images/Placeholder.png"; // Fallback image
         } else {
-            player2ImageElement.src = playerImage[1];
+            player2ImageElement.src = playerImage[1] || "./images/Placeholder.png";
         }
 
         player2NameElement.innerText = playerNames[1];
