@@ -71,7 +71,7 @@ function App() {
     if (!(taHook.taClient.current!.stateManager.getMatches(myTourney.guid) !== undefined && taHook.taClient.current!.stateManager.getMatches(myTourney.guid)!.length > 0)) {
       return;
     }
-    if (playerName === undefined) {
+    if (playerName === undefined && matchID === undefined) {
       let matchID = taHook.taClient.current!.stateManager.getMatches(myTourney.guid)![0].guid;
       await connectToMatch(myTourney, matchID);
       return;
