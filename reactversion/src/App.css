@@ -181,13 +181,14 @@ body {
 
 .Player1Name {
   position: absolute;
-  bottom: -17px;
+  bottom: -10px;
   text-align: right;
   right: 155px;
   color: white;
   text-transform: capitalize;
   font-size: 64px;
   z-index: 5;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 16ch;
@@ -386,13 +387,14 @@ body {
 
 .Player2Name {
   position: absolute;
-  bottom: -22px;
+  bottom: -10px;
   text-align: right;
   left: 149px;
   color: white;
   text-transform: capitalize;
   font-size: 64px;
   z-index: 5;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 16ch;
