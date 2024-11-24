@@ -300,6 +300,9 @@ function App() {
                     return;
                   }
                   addSelfToMatch(undefined, match.guid);
+                  let levelID = match.selectedMap?.gameplayParameters?.beatmap?.levelId.toLowerCase().slice(13);
+                  let levelDiff = match.selectedMap?.gameplayParameters?.beatmap?.difficulty;
+                  getMap(levelID, levelDiff);
                   setSelectableMatches([]);
                 }}
               >
