@@ -56,7 +56,7 @@ function App() {
     const myTourney = taHook.taClient.current!.stateManager.getTournaments().find(x => x.settings?.tournamentName === "rst2024");
 
     if (!myTourney) {
-      console.error(`Could not find tournament with name ${'Moon\'s Test Tourney'}`);
+      console.error(`Could not find tournament with name ${'rst2024'}`);
       return;
     }
 

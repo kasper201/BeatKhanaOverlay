@@ -434,9 +434,9 @@ body {
   height: inherit;
   width: 20%;
   display: flex;
-  justify-content: center;
+  justify-content: left;
   align-items: center;
-  overflow: hidden; /* Ensure content does not overflow */
+  overflow: scroll; /* Ensure content does not overflow */
   z-index: 100001;
 }
 

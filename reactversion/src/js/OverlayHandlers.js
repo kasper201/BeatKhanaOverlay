@@ -4,12 +4,7 @@ async function getImage(platformID) {
         if (!response.ok) {
             // new Error(`HTTP error! status: ${response.status}`);
         }
-        const text = await response.text();
-        if (!text) {
-            // new Error("Empty response body");
-            return "./images/Placeholder.png"; // Fallback image
-        }
-        const data = JSON.parse(text);
+        const data = await response.json();
         if (Array.isArray(data) && data.length > 0) {
             console.log(data[0]);
             return data[0].avatarurl;
