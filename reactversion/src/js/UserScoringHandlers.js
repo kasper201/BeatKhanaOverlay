@@ -104,7 +104,7 @@ function updateScores(user, score)
 {
 	let scoreCountElement = [[], []]; // Initialize with empty arrays
 	let backgroundColour = ["#f6d16a", "#d91e36"];
-	for(let i = 0; i < 3; i++)
+	for(let i = 0; i < 4; i++)
 	{
 		scoreCountElement[0][i] = document.getElementById(`Player1Score${i}`);
 		scoreCountElement[1][i] = document.getElementById(`Player2Score${i}`);
@@ -114,24 +114,35 @@ function updateScores(user, score)
 		scoreCountElement[user][0].style.background = "transparent";
 		scoreCountElement[user][1].style.background = "transparent";
 		scoreCountElement[user][2].style.background = "transparent";
+		scoreCountElement[user][3].style.background = "transparent";
 	}
 	else if(score === 1)
 	{
 		scoreCountElement[user][0].style.background = backgroundColour[user];
 		scoreCountElement[user][1].style.background = "transparent";
 		scoreCountElement[user][2].style.background = "transparent";
+		scoreCountElement[user][3].style.background = "transparent";
 	}
 	else if(score === 2)
 	{
 		scoreCountElement[user][0].style.background = backgroundColour[user];
 		scoreCountElement[user][1].style.background = backgroundColour[user];
 		scoreCountElement[user][2].style.background = "transparent";
+		scoreCountElement[user][3].style.background = "transparent";
 	}
 	else if(score === 3)
 	{
 		scoreCountElement[user][0].style.background = backgroundColour[user];
 		scoreCountElement[user][1].style.background = backgroundColour[user];
 		scoreCountElement[user][2].style.background = backgroundColour[user];
+		scoreCountElement[user][3].style.background = "transparent";
+	}
+	else if(score === 4)
+	{
+		scoreCountElement[user][0].style.background = backgroundColour[user];
+		scoreCountElement[user][1].style.background = backgroundColour[user];
+		scoreCountElement[user][2].style.background = backgroundColour[user];
+		scoreCountElement[user][3].style.background = backgroundColour[user];
 	}
 	else
 	{

@@ -247,9 +247,11 @@ function App() {
               onClick={(e) => handleButton(0, "skip")}></button>
             <button className="Player1ReplayBase" id="Player1ReplayBase"
               onClick={(e) => handleButton(0, "replay")}></button>
+            {/*This can be done SO much better its actually insane*/}
             <button className="Scores" id="ScoresLeft"
                     onClick={() => userWinScore(0)}>
-            <div className="Player1Score" id="Player1Score2"></div>
+              <div className="Player1Score" id="Player1Score3"></div>
+              <div className="Player1Score" id="Player1Score2"></div>
               <div className="Player1Score" id="Player1Score1"></div>
               <div className="Player1Score" id="Player1Score0"></div>
             </button>
@@ -268,6 +270,7 @@ function App() {
               <div className="Player2Score" id="Player2Score0"></div>
               <div className="Player2Score" id="Player2Score1"></div>
               <div className="Player2Score" id="Player2Score2"></div>
+              <div className="Player2Score" id="Player2Score3"></div>
             </button>
             <button className="Player2SkipBase" id="Player2SkipBase"
               onClick={(e) => handleButton(1, "skip")}></button>

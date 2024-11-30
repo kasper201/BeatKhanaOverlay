@@ -197,7 +197,7 @@ body {
 #Player1SkipBase{
   position: absolute;
   top: 79px;
-  right: 261px;
+  right: 244px;
   width: 49px;
   height: 47px;
   display: flex;
@@ -209,7 +209,7 @@ body {
 #Player1ReplayBase{
   position: absolute;
   top: 79px;
-  right: 312px;
+  right: 300px;
   width: 49px;
   height: 47px;
   display: flex;
@@ -227,7 +227,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  right: 119px;
+  right: 129px;
   background: transparent;
   border: transparent;
 }
@@ -343,7 +343,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  left: 105px;
+  left: 126px;
   background: transparent;
   border: transparent;
 }
@@ -364,7 +364,7 @@ body {
 #Player2SkipBase{
   position: absolute;
   top: 76px;
-  left: 236px;
+  left: 242px;
   width: 49px;
   height: 47px;
   display: flex;
@@ -376,7 +376,7 @@ body {
 #Player2ReplayBase{
   position: absolute;
   top: 76px;
-  left: 289px;
+  left: 296px;
   width: 49px;
   height: 47px;
   display: flex;

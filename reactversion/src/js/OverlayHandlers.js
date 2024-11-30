@@ -13,7 +13,7 @@ async function getImage(platformID) {
         }
     } catch (error) {
         console.error("Failed to fetch image:", error);
-        return "./images/Placeholder.png"; // Fallback image
+        return "https://static-cdn.jtvnw.net/jtv_user_pictures/b699fe0a-2e0a-48d6-b479-b7ff4e65950a-profile_image-70x70.png"; // Fallback image
     }
 }
 
@@ -59,13 +59,13 @@ async function setOverlay(playerIDs, playerNames, platformIDs) {
         // set player images
         if(!platformIDs[0] || !playerImage[0]){
             console.error("Invalid platform ID:", platformIDs[0]);
-            player1ImageElement.src = "./images/Placeholder.png"; // Fallback image
+            player1ImageElement.src = "https://static-cdn.jtvnw.net/jtv_user_pictures/b699fe0a-2e0a-48d6-b479-b7ff4e65950a-profile_image-70x70.png"; // Fallback image
         } else {
             player1ImageElement.src = playerImage[0];
         }
         if(!platformIDs[1] || !playerImage[1]){
             console.error("Invalid platform ID:", platformIDs[1]);
-            player2ImageElement.src = "./images/Placeholder.png"; // Fallback image
+            player2ImageElement.src = "https://static-cdn.jtvnw.net/jtv_user_pictures/b699fe0a-2e0a-48d6-b479-b7ff4e65950a-profile_image-70x70.png"; // Fallback image
         } else {
             player2ImageElement.src = playerImage[1];
         }
