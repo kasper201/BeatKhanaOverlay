@@ -2,27 +2,43 @@ import { fancyTimeFormat } from './FormatHandlers.js';
 export let songData = ["",0];
 
 async function getMap(LevelId, LevelDiff) {
+	let diffText, diffColor, diffBG, diffBorder, diffBorderInv;
 
 	switch (LevelDiff) {
 		case 0:
-			var diffText = "Easy";
-			var diffColor = "#008055";
+			diffText = "Easy";
+			diffColor = "#008055";
+			diffBG = "/images/Songcards/Normal/EasyBG.svg";
+			diffBorder = "/images/Songcards/Normal/Easy.svg";
+			diffBorderInv = "/images/Songcards/Inverted/Easy.svg"
 			break;
 		case 1:
-			var diffText = "Normal";
-			var diffColor = "#1268A1";
+			diffText = "Normal";
+			diffColor = "#1268A1";
+			diffBG = "/images/Songcards/Normal/NormalBG.svg";
+			diffBorder = "/images/Songcards/Normal/Normal.svg";
+			diffBorderInv = "/images/Songcards/Inverted/Normal.svg"
 			break;
 		case 2:
-			var diffText = "Hard";
-			var diffColor = "#BD5500";
+			diffText = "Hard";
+			diffColor = "#BD5500";
+			diffBG = "/images/Songcards/Normal/HardBG.svg";
+			diffBorder = "/images/Songcards/Normal/Hard.svg";
+			diffBorderInv = "/images/Songcards/Inverted/Hard.svg"
 			break;
 		case 3:
-			var diffText = "Expert";
-			var diffColor = "#B52A1C";
+			diffText = "Expert";
+			diffColor = "#B52A1C";
+			diffBG = "/images/Songcards/Normal/ExpertBG.svg";
+			diffBorder = "/images/Songcards/Normal/Expert.svg";
+			diffBorderInv = "/images/Songcards/Inverted/Expert.svg"
 			break;
 		case 4:
-			var diffText = "Expert+";
-			var diffColor = "#454088";
+			diffText = "Expert+";
+			diffColor = "#454088";
+			diffBG = "/images/Songcards/Normal/Expert+BG.svg";
+			diffBorder = "/images/Songcards/Normal/Expert+.svg";
+			diffBorderInv = "/images/Songcards/Inverted/Expert+.svg"
 			break;
 	}
 	if (songData[0] != LevelId) {
